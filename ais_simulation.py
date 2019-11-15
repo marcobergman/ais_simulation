@@ -2,9 +2,7 @@ import socket
 import sys
 import math
 import time
-
-# https://softwaredevelopmentperestroika.wordpress.com/2013/11/27/more-fun-with-python-navigational-tricks-ais-nmea-encodingdecoding/
-
+import xml.etree.ElementTree as ET
 
 def nmeaChecksum(s): # str -> two hex digits in str
 	chkSum = 0
@@ -65,7 +63,7 @@ def rmc_message(i_lat, i_lon, i_heading, i_speed):
 
 
 class Boat(object):
-	def __init__(self, mmsi, name, lat, lon, speed, heading, status, maneuver, own):
+	def __init__(self, mmsi, name, lat, lon, heading, speed, status, maneuver, own):
 		self.mmsi = mmsi
 		self.name = name
 		self.lat = float(lat)
@@ -75,7 +73,7 @@ class Boat(object):
 		self.status = status
 		self.maneuver = maneuver
 		self.own = own
-		self.last_move = float(time.time())
+		self.last_move = time.time()
 
 	def show(self):
 		if self.own == False:
@@ -91,27 +89,55 @@ class Boat(object):
 		sock.close()
 
 	def move(self):
+		speedup = 60
 		elapsed = time.time() - self.last_move
-		offset=10
-		self.lat = self.lat + elapsed*self.speed/3600/6* math.cos((self.heading+offset)/180*math.pi)
-		self.lon = self.lon + elapsed*self.speed/3600/6* math.sin((self.heading+offset)/180*math.pi) #* math.cos(self.lat/180*math.pi)
+		self.lat = self.lat + elapsed * self.speed/3600/60 * speedup * math.cos(self.heading/180*math.pi)
+		self.lon = self.lon + elapsed * self.speed/3600/60 * speedup * math.sin(self.heading/180*math.pi) / math.cos(self.lat/180*math.pi)
 		self.show()
-		self.last_move = float(time.time())
+		self.last_move = time.time()
 
 boats = []
 
-boats.append(Boat(244123456, 'Zeehond', 52.587950545, 3.066306379, 19, 28, 0, 0, False))
-boats.append(Boat(244123457, 'Zeehond', 52.646791901, 3.009493285, 21, 208, 0, 0, False))
-boats.append(Boat(244123458, 'Zeehond', 52.701504157, 3.057951512, 18, 208, 0, 0, False))
-boats.append(Boat(244123459, 'Zeehond', 52.539194426, 3.024532045, 20, 28, 1, 1, False))
-boats.append(Boat(244123450, 'Zeehond', 52.614336667, 3.161551667, 6, 298, 0, 2, True))
+tree = ET.parse('ais_simulation.xml')
+root = tree.getroot()
 
-for boat in boats:
-	print("Showing boat %s" % (boat.name))
-	boat.show()
+ns = {'gpx': 'http://www.topografix.com/GPX/1/1'}
+
+for elem in root.findall('gpx:wpt', ns):
+	lat=elem.get('lat')
+	lon=elem.get('lon')
+	name=elem.find('gpx:name', ns).text
+	desc=elem.find('gpx:desc', ns).text
+	descriptions=desc.split('\n')
+	heading=0
+	speed=0
+	mmsi=0
+	status=0
+	for description in descriptions:
+		tuple=description.split('=')
+		if tuple[0]=='SPEED':
+			speed = tuple[1]
+		if tuple[0]=='HEADING':
+			heading = tuple[1]
+		if tuple[0]=='MMSI':
+			mmsi = tuple[1]
+		if tuple[0]=='STATUS':
+			status = tuple[1]
+	if name == 'AIS-OWN':
+		own=True
+	else:
+		own=False
+	print ('name=%s, mmsi=%s, lat=%s, lon=%s, heading=%s, speed=%s, status=%s' % (name, mmsi, lat, lon, heading, speed, status))
+	boats.append(Boat(mmsi, name, float(lat), float(lon), float(heading), float(speed), 0, 0, own))
+
+#boats.append(Boat(244123456, 'Zeehond', 52.587950545, 3.066306379, 28, 19, 0, 0, False))
+#boats.append(Boat(244123457, 'Zeehond', 52.646791901, 3.009493285, 208, 21, 0, 0, False))
+#boats.append(Boat(244123458, 'Zeehond', 52.701504157, 3.057951512, 208, 18, 0, 2, False))
+#boats.append(Boat(244123459, 'Zeehond', 52.539194426, 3.024532045, 28, 20, 1, 1, False))
+#boats.append(Boat(244123450, 'Zeehond', 52.614336667, 3.161551667, 298, 6, 0, 0, True))
 
 for x in range (1,500):
-	time.sleep(1)
 	for boat in boats:
 		boat.move()
+	time.sleep(1)
 
