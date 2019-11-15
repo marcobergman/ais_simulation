@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<gpx version="1.1" creator="OpenCPN" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.topografix.com/GPX/1/1" xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd" xmlns:opencpn="http://www.opencpn.org">
+  <wpt lat="52.578281667" lon="3.062908333">
+    <time>2019-11-15T01:42:18Z</time>
+    <name>AIS-1</name>
+    <desc>HEADING=028
+SPEED=10.3
+STATUS=1
+MMSI=1</desc>
+    <sym>triangle</sym>
+    <type>WPT</type>
+    <extensions>
+      <opencpn:guid>0bad0000-14ac-43f7-942d-d69b29e50000</opencpn:guid>
+      <opencpn:viz_name>1</opencpn:viz_name>
+      <opencpn:arrival_radius>0.050</opencpn:arrival_radius>
+      <opencpn:waypoint_range_rings visible="false" number="0" step="1" units="0" colour="#FF0000" />
+      <opencpn:scale_min_max UseScale="false" ScaleMin="2147483646" ScaleMax="0" />
+    </extensions>
+  </wpt>
+  <wpt lat="52.560516681" lon="3.018649757">
+    <time>2019-11-15T09:06:12Z</time>
+    <name>AIS-2</name>
+    <desc>HEADING=28
+SPEED=10.3
+STATUS=0
+MMSI=2</desc>
+    <sym>triangle</sym>
+    <type>WPT</type>
+    <extensions>
+      <opencpn:guid>68f7ffff-ecfb-4f7e-bd5a-c9796f30ffff</opencpn:guid>
+      <opencpn:viz_name>1</opencpn:viz_name>
+      <opencpn:arrival_radius>0.050</opencpn:arrival_radius>
+      <opencpn:waypoint_range_rings visible="false" number="0" step="1" units="0" colour="#FF0000" />
+      <opencpn:scale_min_max UseScale="false" ScaleMin="2147483646" ScaleMax="0" />
+    </extensions>
+  </wpt>
+  <wpt lat="52.780918302" lon="3.132218962">
+    <time>2019-11-15T09:06:14Z</time>
+    <name>AIS-3</name>
+    <desc>HEADING=208
+SPEED=10.3
+STATUS=1
+MMSI=3</desc>
+    <sym>triangle</sym>
+    <type>WPT</type>
+    <extensions>
+      <opencpn:guid>1b890000-a8af-4b33-be71-582c0dda0000</opencpn:guid>
+      <opencpn:viz_name>1</opencpn:viz_name>
+      <opencpn:arrival_radius>0.050</opencpn:arrival_radius>
+      <opencpn:waypoint_range_rings visible="false" number="0" step="1" units="0" colour="#FF0000" />
+      <opencpn:scale_min_max UseScale="false" ScaleMin="2147483646" ScaleMax="0" />
+    </extensions>
+  </wpt>
+  <wpt lat="52.477138333" lon="2.952928333">
+    <time>2019-11-15T09:06:17Z</time>
+    <name>AIS-4</name>
+    <desc>HEADING=028
+SPEED=10.3
+STATUS=1
+MMSI=4</desc>
+    <sym>triangle</sym>
+    <type>WPT</type>
+    <extensions>
+      <opencpn:guid>02490000-6aee-42cc-9003-0074775dffff</opencpn:guid>
+      <opencpn:viz_name>1</opencpn:viz_name>
+      <opencpn:arrival_radius>0.050</opencpn:arrival_radius>
+      <opencpn:waypoint_range_rings visible="false" number="0" step="1" units="0" colour="#FF0000" />
+      <opencpn:scale_min_max UseScale="false" ScaleMin="2147483646" ScaleMax="0" />
+    </extensions>
+  </wpt>
+  <wpt lat="52.603106667" lon="3.196936667">
+    <time>2019-11-15T10:58:03Z</time>
+    <name>AIS-OWN</name>
+    <desc>HEADING=298
+SPEED=6
+STATUS=1
+MMSI=6</desc>
+    <sym>triangle</sym>
+    <type>WPT</type>
+    <extensions>
+      <opencpn:guid>0f8b0000-8f71-4b54-9dc9-b229270b0000</opencpn:guid>
+      <opencpn:viz_name>1</opencpn:viz_name>
+      <opencpn:arrival_radius>0.050</opencpn:arrival_radius>
+      <opencpn:waypoint_range_rings visible="false" number="0" step="1" units="0" colour="#FF0000" />
+      <opencpn:scale_min_max UseScale="false" ScaleMin="2147483646" ScaleMax="0" />
+    </extensions>
+  </wpt>
+</gpx>
+
