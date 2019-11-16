@@ -6,16 +6,16 @@ prerequisites:
 - some nmea listener listening on localhost tcp/20220
 
 to install:
-git clone https://github.com/marcobergman/ais_simulation
+- git clone https://github.com/marcobergman/ais_simulation
 
 to run:
-cd ais_simulation/
-python simulate_ais.py
+- cd ais_simulation/
+- python simulate_ais.py
 
 hints:
-The default ais_simulation.gpx file was exported from OpenCPN. It should contain waypoints with HEADING, SPEED, and MMSI name=value pairs in the description field; see the examples. The waypoint named AIS-OWN is the waypoint that is used for your own boat.
+- The default ais_simulation.gpx file was exported from OpenCPN. It should contain waypoints with HEADING, SPEED, and MMSI name=value pairs in the description field; see the examples. The waypoint named AIS-OWN is the waypoint that is used for your own boat.
 
-For a simple nmea listener, install kplex and configure with this file; direct your plotter to this socket 
+- For a simple nmea listener, install kplex and configure with this file; direct your plotter to this socket 
 ```
 #/etc/kplex.conf
 [tcp]
