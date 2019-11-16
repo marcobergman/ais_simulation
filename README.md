@@ -24,3 +24,4 @@ port=20220
 direction=both
 strict=no
 ```
+![example](https://github.com/marcobergman/ais_simulation/blob/master/ais_simulator.png)
