@@ -1,8 +1,8 @@
 # ais_simulation
-Simulates moving AIS targets by creating NMEA AIVD messages and sending them off by TCP
+Simulates moving AIS targets by creating NMEA AIVD messages and sending them off by TCP; tested both on raspberry linux and windows.
 
 prerequisites:
-- python 2 or 3  installed with wxpython (install with pip install -U wxPython)
+- python 2 or 3 installed with wxpython (install with pip install -U wxPython)
 - some nmea listener listening on localhost tcp/20220
 
 to install:
