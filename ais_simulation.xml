@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <gpx version="1.1" creator="OpenCPN" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.topografix.com/GPX/1/1" xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd" xmlns:opencpn="http://www.opencpn.org">
-  <wpt lat="52.578281667" lon="3.062908333">
+  <wpt lat="52.577615042" lon="3.062908344">
     <time>2019-11-15T01:42:18Z</time>
     <name>AIS-1</name>
     <desc>HEADING=028
@@ -68,10 +68,10 @@ MMSI=4</desc>
       <opencpn:scale_min_max UseScale="false" ScaleMin="2147483646" ScaleMax="0" />
     </extensions>
   </wpt>
-  <wpt lat="52.603106667" lon="3.196936667">
+  <wpt lat="52.626518333" lon="3.199091667">
     <time>2019-11-15T10:58:03Z</time>
     <name>AIS-OWN</name>
-    <desc>HEADING=298
+    <desc>HEADING=260
 SPEED=6
 STATUS=1
 MMSI=6</desc>
