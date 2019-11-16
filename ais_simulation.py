@@ -3,6 +3,12 @@ import sys
 import math
 import time
 import xml.etree.ElementTree as ET
+import threading
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_address = ('localhost', 20220)
+sock.connect(server_address)
+
 
 def nmeaChecksum(s): # str -> two hex digits in str
 	chkSum = 0
@@ -17,7 +23,6 @@ def nmeaChecksum(s): # str -> two hex digits in str
 	else:
 		return '0'+hexstr
 
-	# join NMEA pre- and postfix to payload string
 
 def joinNMEAstrs(payloadstr): #str -> str
 	tempstr = '!AIVDM,1,1,,A,' + payloadstr + ',0'
@@ -40,8 +45,8 @@ def ais_message (i_mtype, i_repeat, i_mmsi, i_status, i_turn, i_speed, i_accurac
 		binform(int(4.733*math.sqrt(float(i_turn))), 8) + binform(i_speed*10, 10) + binform(i_accuracy, 1) + binform(int(600000*float(i_lon)), 28) + \
 		binform(int(600000*float(i_lat)), 27) + binform(i_course*10, 12) + binform(i_heading, 9) + binform(i_second, 6) + \
 		binform(i_maneuver, 2) + binform(i_spare, 3) + binform(i_raim, 1) + binform(i_radio, 19)
-	#print "type..r.mmsi..........................sta.turn....speed.....alon.........................lat........................course......heading..sec...m.sp.rradio.............."
-	#print bits
+	#print ("type..r.mmsi..........................sta.turn....speed.....alon.........................lat........................course......heading..sec...m.sp.rradio..............")
+	#print (bits)
 	enc = ''
 	mapping = "0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVW`abcdefghijklmnopqrstuvw"
 	while bits:
@@ -61,83 +66,143 @@ def rmc_message(i_lat, i_lon, i_heading, i_speed):
 	tempstr += chksum 
 	return tempstr
 
+class Simulation(object):
 
-class Boat(object):
-	def __init__(self, mmsi, name, lat, lon, heading, speed, status, maneuver, own):
-		self.mmsi = mmsi
-		self.name = name
-		self.lat = float(lat)
-		self.lon = float(lon)
-		self.speed = float(speed)
-		self.heading = float(heading)
-		self.status = status
-		self.maneuver = maneuver
-		self.own = own
-		self.last_move = time.time()
+	boats = []
 
-	def show(self):
-		if self.own == False:
-			my_message = ais_message (1, 0, self.mmsi, self.status, 0, self.speed, 1, self.lat, self.lon, self.heading, self.heading, 0, self.maneuver, 0, 0, 0)
+	ownBoat = []
+
+	paused = False
+
+	c=0
+
+	class Boat(object):
+		def __init__(self, mmsi, name, lat, lon, heading, speed, status, maneuver, own):
+			self.mmsi = mmsi
+			self.name = name
+			self.lat = float(lat)
+			self.lon = float(lon)
+			self.speed = float(speed)
+			self.heading = float(heading)
+			self.status = status
+			self.maneuver = maneuver
+			self.own = own
+			self.last_move = time.time()
+
+		def show(self):
+			if self.own == False:
+				my_message = ais_message (1, 0, self.mmsi, self.status, 0, self.speed, 1, self.lat, self.lon, self.heading, self.heading, 0, self.maneuver, 0, 0, 0)
+			else:
+				my_message = rmc_message (self.lat, self.lon, self.heading, self.speed)
+			print (my_message)
+
+			sock.sendall((my_message+"\r\n").encode('utf-8'))
+
+		def move(self):
+			speedup = 60
+			elapsed = time.time() - self.last_move
+			self.lat = self.lat + elapsed * self.speed/3600/60 * speedup * math.cos(self.heading/180*math.pi)
+			self.lon = self.lon + elapsed * self.speed/3600/60 * speedup * math.sin(self.heading/180*math.pi) / math.cos(self.lat/180*math.pi)
+			self.last_move = time.time()
+
+
+	def loadBoats(self, filename):
+
+		self.boats = []
+
+		tree = ET.parse(filename)
+		root = tree.getroot()
+
+		ns = {'gpx': 'http://www.topografix.com/GPX/1/1'}
+
+		for elem in root.findall('gpx:wpt', ns):
+			lat=elem.get('lat')
+			lon=elem.get('lon')
+			name=elem.find('gpx:name', ns).text
+			desc=elem.find('gpx:desc', ns).text
+			descriptions=desc.split('\n')
+			heading=0
+			speed=0
+			mmsi=0
+			status=0
+			for description in descriptions:
+				tuple=description.split('=')
+				if tuple[0]=='SPEED':
+					speed = tuple[1]
+				if tuple[0]=='HEADING':
+					heading = tuple[1]
+				if tuple[0]=='MMSI':
+					mmsi = tuple[1]
+				if tuple[0]=='STATUS':
+					status = tuple[1]
+			if name == 'AIS-OWN':
+				own=True
+			else:
+				own=False
+			print ('name=%s, mmsi=%s, lat=%s, lon=%s, heading=%s, speed=%s, status=%s' % (name, mmsi, lat, lon, heading, speed, status))
+			newBoat=self.Boat(mmsi, name, float(lat), float(lon), float(heading), float(speed), 0, 0, own)
+			self.boats.append(newBoat)
+			if own:
+				self.ownBoat = newBoat
+			newBoat.show()
+
+
+	def processBoats(self):
+		if self.paused == False:
+			self.moveBoats()
 		else:
-			my_message = rmc_message (self.lat, self.lon, self.heading, self.speed)
-		print my_message
+			self.showBoats()
+		self.timer = threading.Timer(1, self.processBoats)
+		self.timer.start()
 
-		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		server_address = ('localhost', 20220)
-		sock.connect(server_address)
-		sock.sendall(my_message+"\r\n")
-		sock.close()
 
-	def move(self):
-		speedup = 60
-		elapsed = time.time() - self.last_move
-		self.lat = self.lat + elapsed * self.speed/3600/60 * speedup * math.cos(self.heading/180*math.pi)
-		self.lon = self.lon + elapsed * self.speed/3600/60 * speedup * math.sin(self.heading/180*math.pi) / math.cos(self.lat/180*math.pi)
-		self.show()
-		self.last_move = time.time()
+	def moveBoats(self):
+		for boat in self.boats:
+			boat.move()
+			boat.show()
+			self.c+=1
+		print (self.c)
 
-boats = []
 
-tree = ET.parse('ais_simulation.xml')
-root = tree.getroot()
+	def showBoats(self):
+		for boat in self.boats:
+			boat.show()
 
-ns = {'gpx': 'http://www.topografix.com/GPX/1/1'}
 
-for elem in root.findall('gpx:wpt', ns):
-	lat=elem.get('lat')
-	lon=elem.get('lon')
-	name=elem.find('gpx:name', ns).text
-	desc=elem.find('gpx:desc', ns).text
-	descriptions=desc.split('\n')
-	heading=0
-	speed=0
-	mmsi=0
-	status=0
-	for description in descriptions:
-		tuple=description.split('=')
-		if tuple[0]=='SPEED':
-			speed = tuple[1]
-		if tuple[0]=='HEADING':
-			heading = tuple[1]
-		if tuple[0]=='MMSI':
-			mmsi = tuple[1]
-		if tuple[0]=='STATUS':
-			status = tuple[1]
-	if name == 'AIS-OWN':
-		own=True
-	else:
-		own=False
-	print ('name=%s, mmsi=%s, lat=%s, lon=%s, heading=%s, speed=%s, status=%s' % (name, mmsi, lat, lon, heading, speed, status))
-	boats.append(Boat(mmsi, name, float(lat), float(lon), float(heading), float(speed), 0, 0, own))
+	def startBoats(self, event):
+		filename=event.GetEventObject().filename
+		print ("Starting")
+		self.loadBoats(filename)
+		try:
+			self.timer.cancel()
+		except:
+			pass
+		self.timer = threading.Timer(1, self.processBoats)
+		self.timer.start()
+		self.paused = False
 
-#boats.append(Boat(244123456, 'Zeehond', 52.587950545, 3.066306379, 28, 19, 0, 0, False))
-#boats.append(Boat(244123457, 'Zeehond', 52.646791901, 3.009493285, 208, 21, 0, 0, False))
-#boats.append(Boat(244123458, 'Zeehond', 52.701504157, 3.057951512, 208, 18, 0, 2, False))
-#boats.append(Boat(244123459, 'Zeehond', 52.539194426, 3.024532045, 28, 20, 1, 1, False))
-#boats.append(Boat(244123450, 'Zeehond', 52.614336667, 3.161551667, 298, 6, 0, 0, True))
 
-for x in range (1,500):
-	for boat in boats:
-		boat.move()
-	time.sleep(1)
+	def stopBoats(self, event):
+		print ("Stopping")
+		self.timer.cancel()
 
+
+	def pauseBoats(self, event):
+		print ("Pausing")
+		self.paused = True
+
+
+	def resumeBoats(self, event):
+		print ("Resuming")
+		for boat in self.boats:
+			boat.last_move = time.time()
+		self.paused = False
+
+
+	def steerBoat(self, event):
+		steerValue = event.GetEventObject().steerValue
+		print (steerValue)
+		self.ownBoat.heading = self.ownBoat.heading + steerValue
+
+
+#simulation.moveBoats()
