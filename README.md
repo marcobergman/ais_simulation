@@ -3,7 +3,8 @@ Simulates moving AIS targets by creating NMEA AIVD messages and sending them off
 
 prerequisites:
 - python 2 or 3 installed with wxpython (install with pip install -U wxPython)
-- some nmea listener listening on localhost tcp/20220
+- udp clients listening to broascasts on socket 10110, or
+- some nmea listener listening on localhost tcp/20220 (check the code)
 
 to install:
 - git clone https://github.com/marcobergman/ais_simulation
@@ -24,4 +25,6 @@ port=20220
 direction=both
 strict=no
 ```
+- create windows executable with pyinstaller --onefile simulate_ais.py
+
 ![example](https://github.com/marcobergman/ais_simulation/blob/master/ais_simulator.png)
