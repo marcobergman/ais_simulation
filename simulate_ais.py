@@ -6,10 +6,12 @@ import ais_simulation
 
 simulation = ais_simulation.Simulation()
 
-class UI(wx.Frame):
+DEFAULT_FILENAME = "ais_simulation.gpx"
+
+class SimulatorFrame(wx.Frame):
 
     def __init__(self, parent, title):
-        super(UI, self).__init__(parent, title = title, size=(460,150))
+        super(SimulatorFrame, self).__init__(parent, title = title, size=(490,150))
 
         self.InitUI()
         self.Centre()
@@ -26,7 +28,7 @@ class UI(wx.Frame):
 
 
         ## Setup up controls
-        filename = wx.TextCtrl(panel, value="ais_simulation.xml")
+        filename = wx.TextCtrl(panel, value=DEFAULT_FILENAME)
         sizer.Add(filename, pos = (0,1), flag = wx.EXPAND|wx.ALL, span=(1,2))
         def OnChange_filename(event):
              buttonStart.filename = filename.GetValue()
@@ -74,10 +76,20 @@ class UI(wx.Frame):
 
         panel.SetSizerAndFit(sizer)
 
+        self.Bind(wx.EVT_CLOSE, self.OnExitApp)
 
-simulation.loadBoats("ais_simulation.xml")
+    def OnExitApp(self, event):
+        print ('--- Window closed')
+        simulation.stopBoats(event)
+        self.Destroy()
+
+
+
+simulation.loadBoats(DEFAULT_FILENAME)
+print("--- Initial positioning of boats")
+simulation.showBoats()
 
 app = wx.App()
-UI(None, title = 'AIS Simulator')
+myFrame = SimulatorFrame(None, title = 'AIS Simulator')
 app.MainLoop()
 

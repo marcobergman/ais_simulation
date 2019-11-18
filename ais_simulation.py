@@ -4,10 +4,20 @@ import math
 import time
 import xml.etree.ElementTree as ET
 import threading
+from datetime import datetime
 
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_address = ('localhost', 20220)
-sock.connect(server_address)
+
+#TCP
+#sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+#server_address = ('localhost', 20220)
+#sock.connect(server_address)
+
+#UDP
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+#sock.settimeout(0.2)
+#sock.bind(("", 10110))
+print ("--- Broadcasting NMEA messges to UDP:10110")
 
 
 def nmeaChecksum(s): # str -> two hex digits in str
@@ -32,7 +42,8 @@ def joinNMEAstrs(payloadstr): #str -> str
 	return tempstr
 
 
-def ais_message (i_mtype, i_repeat, i_mmsi, i_status, i_turn, i_speed, i_accuracy, i_lat, i_lon, i_course, i_heading, i_second, i_maneuver, i_spare, i_raim, i_radio):
+def ais_message (i_mtype, i_repeat, i_mmsi, i_status, i_turn, i_speed, i_accuracy, i_lat, i_lon, i_course, 
+			i_heading, i_second, i_maneuver, i_spare, i_raim, i_radio):
 	def binform (num, bitWidth):
 		# deal with 2's complement
 		# thx to https://stackoverflow.com/questions/12946116/twos-complement-binary-in-python
@@ -58,13 +69,29 @@ def ais_message (i_mtype, i_repeat, i_mmsi, i_status, i_turn, i_speed, i_accurac
 	
 
 def rmc_message(i_lat, i_lon, i_heading, i_speed):
-	lat = "%02.f%07.4f" % (math.trunc(i_lat), 60*(i_lat-math.trunc(i_lat)))
-	lon = "%03.f%07.4f" % (math.trunc(i_lon), 60*(i_lon-math.trunc(i_lon)))
-	tempstr = '$GPRMC,123519,A,%s,N,%s,E,%s,%s,230394,,,A,C' % (lat, lon, i_speed, i_heading)
+	t_lat = "%02.f%07.4f" % (math.trunc(i_lat), 60*(i_lat-math.trunc(i_lat)))
+	t_lon = "%03.f%07.4f" % (math.trunc(i_lon), 60*(i_lon-math.trunc(i_lon)))
+	t_date = datetime.now().strftime("%d%m%y");
+	t_time = datetime.now().strftime("%H%M%S");
+
+	tempstr = '$GPRMC,%s,A,%s,N,%s,E,%s,%s,%s,,,A,C' % (t_date, t_lat, t_lon, i_speed, i_heading, t_time)
 	chksum = nmeaChecksum(tempstr)
 	tempstr += '*'
 	tempstr += chksum 
 	return tempstr
+
+def gll_message(i_lat, i_lon, i_heading, i_speed):
+	t_lat = "%02.f%07.4f" % (math.trunc(i_lat), 60*(i_lat-math.trunc(i_lat)))
+	t_lon = "%03.f%07.4f" % (math.trunc(i_lon), 60*(i_lon-math.trunc(i_lon)))
+	t_date = datetime.now().strftime("%d%m%y");
+	t_time = datetime.now().strftime("%H%M%S");
+
+	tempstr = '$GPGLL,%s,N,%s,E,%s,A,C' % (t_lat, t_lon, t_time)
+	chksum = nmeaChecksum(tempstr)
+	tempstr += '*'
+	tempstr += chksum 
+	return tempstr
+
 
 class Simulation(object):
 
@@ -91,12 +118,17 @@ class Simulation(object):
 
 		def show(self):
 			if self.own == False:
-				my_message = ais_message (1, 0, self.mmsi, self.status, 0, self.speed, 1, self.lat, self.lon, self.heading, self.heading, 0, self.maneuver, 0, 0, 0)
+				my_message = ais_message (1, 0, self.mmsi, self.status, 0, self.speed, 1, self.lat, self.lon, 
+					self.heading, self.heading, 0, self.maneuver, 0, 0, 0)
 			else:
-				my_message = rmc_message (self.lat, self.lon, self.heading, self.speed)
+				my_message = rmc_message (self.lat, self.lon, self.heading, self.speed) + "\r\n" + gll_message(self.lat, self.lon, self.heading, self.speed)
 			print (my_message)
 
-			sock.sendall((my_message+"\r\n").encode('utf-8'))
+			# TCP
+			#sock.sendall((my_message+"\r\n").encode('utf-8'))
+
+			# UDP
+			sock.sendto((my_message+"\r\n").encode('utf-8'), ('<broadcast>', 10110))
 
 		def move(self):
 			speedup = 60
@@ -108,9 +140,15 @@ class Simulation(object):
 
 	def loadBoats(self, filename):
 
+		print("--- Loading boats from %s" % filename)
 		self.boats = []
 
-		tree = ET.parse(filename)
+		try:
+			tree = ET.parse(filename)
+		except:
+			print ("*** Could not open file %s. Consider downloading example file ais_simulation.gpx from github." % filename)
+			return False
+
 		root = tree.getroot()
 
 		ns = {'gpx': 'http://www.topografix.com/GPX/1/1'}
@@ -144,7 +182,8 @@ class Simulation(object):
 			self.boats.append(newBoat)
 			if own:
 				self.ownBoat = newBoat
-			newBoat.show()
+
+		return True
 
 
 	def processBoats(self):
@@ -171,29 +210,36 @@ class Simulation(object):
 
 	def startBoats(self, event):
 		filename=event.GetEventObject().filename
-		print ("Starting")
 		self.loadBoats(filename)
+
 		try:
 			self.timer.cancel()
 		except:
 			pass
-		self.timer = threading.Timer(1, self.processBoats)
-		self.timer.start()
-		self.paused = False
+		if self.boats:
+			print ("--- Starting simulation")
+			self.timer = threading.Timer(1, self.processBoats)
+			self.timer.start()
+			self.paused = False
+		else:
+			print ("*** No boats")
 
 
 	def stopBoats(self, event):
-		print ("Stopping")
-		self.timer.cancel()
+		try:
+			self.timer.cancel()
+			print ("--- Stopping simulation, stop sending NMEA messages")
+		except:
+			pass
 
 
 	def pauseBoats(self, event):
-		print ("Pausing")
+		print ("--- Pausing simulation; keep on sending NMEA messages")
 		self.paused = True
 
 
 	def resumeBoats(self, event):
-		print ("Resuming")
+		print ("--- Resuming simulation")
 		for boat in self.boats:
 			boat.last_move = time.time()
 		self.paused = False
@@ -204,5 +250,8 @@ class Simulation(object):
 		print (steerValue)
 		self.ownBoat.heading = self.ownBoat.heading + steerValue
 
+	def __del__(self):
+		print ("--- Closing UDP socket")
+		sock.close()
 
 #simulation.moveBoats()
