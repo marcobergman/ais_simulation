@@ -35,11 +35,9 @@ def nmeaChecksum(s): # str -> two hex digits in str
 
 
 def joinNMEAstrs(payloadstr): #str -> str
-	tempstr = '!AIVDM,1,1,,A,' + payloadstr + ',0'
-	chksum = nmeaChecksum(tempstr)
-	tempstr += '*'
-	tempstr += chksum 
-	return tempstr
+    tempstr = '!AIVDM,1,1,,A,' + payloadstr + ',0'
+    result = tempstr + '*' + nmeaChecksum(tempstr) + "\r\n"
+    return result
 
 
 def ais_message (i_mtype, i_repeat, i_mmsi, i_status, i_turn, i_speed, i_accuracy, i_lat, i_lon, i_course, 
@@ -69,28 +67,40 @@ def ais_message (i_mtype, i_repeat, i_mmsi, i_status, i_turn, i_speed, i_accurac
 	
 
 def rmc_message(i_lat, i_lon, i_heading, i_speed):
-	t_lat = "%02.f%07.4f" % (math.trunc(i_lat), 60*(i_lat-math.trunc(i_lat)))
-	t_lon = "%03.f%07.4f" % (math.trunc(i_lon), 60*(i_lon-math.trunc(i_lon)))
-	t_date = datetime.now().strftime("%d%m%y");
-	t_time = datetime.now().strftime("%H%M%S");
+    t_lat = "%02.f%07.4f" % (math.trunc(i_lat), 60*(i_lat-math.trunc(i_lat)))
+    t_lon = "%03.f%07.4f" % (math.trunc(i_lon), 60*(i_lon-math.trunc(i_lon)))
+    t_date = datetime.now().strftime("%d%m%y");
+    t_time = datetime.now().strftime("%H%M%S");
 
-	tempstr = '$GPRMC,%s,A,%s,N,%s,E,%s,%s,%s,,,A,C' % (t_date, t_lat, t_lon, i_speed, i_heading, t_time)
-	chksum = nmeaChecksum(tempstr)
-	tempstr += '*'
-	tempstr += chksum 
-	return tempstr
+    tempstr = '$GPRMC,%s,A,%s,N,%s,E,%s,%s,%s,,,A,C' % (t_date, t_lat, t_lon, i_speed, i_heading, t_time)
+    result = tempstr + '*' + nmeaChecksum(tempstr) + "\r\n"
+    return result
 
 def gll_message(i_lat, i_lon, i_heading, i_speed):
-	t_lat = "%02.f%07.4f" % (math.trunc(i_lat), 60*(i_lat-math.trunc(i_lat)))
-	t_lon = "%03.f%07.4f" % (math.trunc(i_lon), 60*(i_lon-math.trunc(i_lon)))
-	t_date = datetime.now().strftime("%d%m%y");
-	t_time = datetime.now().strftime("%H%M%S");
+    t_lat = "%02.f%07.4f" % (math.trunc(i_lat), 60*(i_lat-math.trunc(i_lat)))
+    t_lon = "%03.f%07.4f" % (math.trunc(i_lon), 60*(i_lon-math.trunc(i_lon)))
+    t_date = datetime.now().strftime("%d%m%y");
+    t_time = datetime.now().strftime("%H%M%S");
 
-	tempstr = '$GPGLL,%s,N,%s,E,%s,A,C' % (t_lat, t_lon, t_time)
-	chksum = nmeaChecksum(tempstr)
-	tempstr += '*'
-	tempstr += chksum 
-	return tempstr
+    tempstr = '$GPGLL,%s,N,%s,E,%s,A,C' % (t_lat, t_lon, t_time)
+    result = tempstr + '*' + nmeaChecksum(tempstr) + "\r\n"
+    return result
+
+def mwv_message(i_awa, i_aws):
+    t_awa = "%03.0f" % (float(i_awa))
+    t_aws = "%02.f" % (float(i_aws))
+    tempstr = "$IIMWV,%s,R,%s,N,A" % (t_awa, t_aws)
+    result = tempstr + '*' + nmeaChecksum(tempstr) + "\r\n"
+    return result
+
+def vhw_message(i_hdm, i_stwn):
+    t_hdm = "%03.0f" % (float(i_hdm))
+    t_hdt = "%03.0f" % (float(i_hdm))
+    t_stwn = "%02.f" % (float(i_stwn))
+    t_stwk = "%02.f" % (float(i_stwn))
+    tempstr = "$IIVHW,%s,T,%s,M,%s,N,%s,K" % (t_hdm, t_hdt, t_stwn, t_stwk)
+    result = tempstr + '*' + nmeaChecksum(tempstr) + "\r\n"
+    return result
 
 
 class Simulation(object):
@@ -115,21 +125,38 @@ class Simulation(object):
 			self.maneuver = maneuver
 			self.own = own
 			self.last_move = time.time()
+			self.twd = 0
+			self.tws = 0
+			self.twv = 0
+            
 
 		def show(self):
 			if self.own == False:
 				my_message = ais_message (1, 0, self.mmsi, self.status, 0, self.speed, 1, self.lat, self.lon, 
 					self.heading, self.heading, 0, self.maneuver, 0, 0, 0)
 			else:
-				my_message = rmc_message (self.lat, self.lon, self.heading, self.speed) + "\r\n" + gll_message(self.lat, self.lon, self.heading, self.speed)
-			print (my_message)
+                # calcucate apparent wind:
+				print ("self.speed = %3f  self.tws=%3f  self.twd=%3f  self.heading=%3f" % (self.speed, self.tws, self.twd, self.heading))
+				aws = math.sqrt(self.speed**2+self.tws**2 - 2 * self.speed*self.tws*math.cos((self.heading-self.twd-180)/180*math.pi))
+				print ("aws = " + str(aws))
+				angle = math.asin(math.sin((self.heading-self.twd - 180)/180*math.pi)/aws*self.tws)/math.pi*180
+				print ("angle=" + str(angle))
+				#if 90 < (self.heading - 180 - self.twd) % 360 < 270:
+					#angle = 180 - angle
+					#print ("angle=" + str(angle))
+				awa = (angle) % 360 
+				my_message = rmc_message (self.lat, self.lon, self.heading, self.speed) + \
+								gll_message(self.lat, self.lon, self.heading, self.speed) + \
+								mwv_message(awa, aws) + \
+								vhw_message(self.heading, self.speed)
+			sys.stdout.write (my_message)                                                              
 
 			# TCP
 			#sock.sendall((my_message+"\r\n").encode('utf-8'))
 
 			# UDP
-			sock.sendto((my_message+"\r\n").encode('utf-8'), ('<broadcast>', 10110))
-
+			sock.sendto((my_message).encode('utf-8'), ('<broadcast>', 10110))
+            
 		def move(self):
 			speedup = 60
 			elapsed = time.time() - self.last_move
@@ -249,6 +276,11 @@ class Simulation(object):
 		steerValue = event.GetEventObject().steerValue
 		print (steerValue)
 		self.ownBoat.heading = self.ownBoat.heading + steerValue
+
+	def setTrueWind(self, event):
+		self.ownBoat.twd = float(event.GetEventObject().twd)
+		self.ownBoat.tws = float(event.GetEventObject().tws)
+		self.ownBoat.twv = float(event.GetEventObject().twv)
 
 	def __del__(self):
 		print ("--- Closing UDP socket")

@@ -25,7 +25,9 @@ class SimulatorFrame(wx.Frame):
         ## Set up Statictext
         text1 = wx.StaticText(panel, label = "filename")
         sizer.Add(text1, pos = (0, 0), flag = wx.ALL, border = 3)
-
+        text2 = wx.StaticText(panel, label = "true wind")
+        sizer.Add(text2, pos = (3, 0), flag = wx.ALL, border = 3)
+        
 
         ## Setup up controls
         filename = wx.TextCtrl(panel, value=DEFAULT_FILENAME)
@@ -64,6 +66,16 @@ class SimulatorFrame(wx.Frame):
         sizer.Add(buttonPlus10, pos = (2, 4), flag = wx.ALIGN_CENTER|wx.ALL, border = 3)
         buttonPlus10.steerValue=10
 
+        buttonSetWind = wx.Button(panel, label = "Set wind")
+        sizer.Add(buttonSetWind, pos = (3, 4), flag = wx.ALIGN_CENTER|wx.ALL, border = 3)
+        
+        textTwd = wx.TextCtrl(panel, value="225", size=(70,10))
+        sizer.Add(textTwd, pos = (3, 1), flag = wx.EXPAND|wx.ALL, border = 3)
+        textTws = wx.TextCtrl(panel, value="15", size=(70,20))
+        sizer.Add(textTws, pos = (3, 2), flag = wx.EXPAND|wx.ALL, border = 3)
+        textTwv = wx.TextCtrl(panel, value="10", size=(70,20))
+        sizer.Add(textTwv, pos = (3, 3), flag = wx.EXPAND|wx.ALL, border = 3)
+
         buttonStart.Bind(wx.EVT_BUTTON, simulation.startBoats)
         buttonPause.Bind(wx.EVT_BUTTON, simulation.pauseBoats)
         buttonResume.Bind(wx.EVT_BUTTON, simulation.resumeBoats)
@@ -73,6 +85,16 @@ class SimulatorFrame(wx.Frame):
         buttonMinus1.Bind(wx.EVT_BUTTON, simulation.steerBoat)
         buttonPlus1.Bind(wx.EVT_BUTTON, simulation.steerBoat)
         buttonPlus10.Bind(wx.EVT_BUTTON, simulation.steerBoat)
+        
+        def OnChange_wind(event):
+             buttonSetWind.twd = textTwd.GetValue()
+             buttonSetWind.tws = textTws.GetValue()
+             buttonSetWind.twv = textTwv.GetValue()
+        self.Bind(wx.EVT_TEXT, OnChange_wind, textTwd)
+        self.Bind(wx.EVT_TEXT, OnChange_wind, textTws)
+        self.Bind(wx.EVT_TEXT, OnChange_wind, textTwv)
+
+        buttonSetWind.Bind(wx.EVT_BUTTON, simulation.setTrueWind)
 
         panel.SetSizerAndFit(sizer)
 
