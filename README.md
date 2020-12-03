@@ -34,3 +34,6 @@ The script allows setting a true wind direction, and converts this in apparent w
 
 # track simulation
 The 'own boat' will normally follow the heading initially set in the waypoint, and manually adjusted by the direction arrows. If NMEA APB sentences are sent to TCP/10111, the heading will be taken from 'bearing present position to waypoint' field instead. This simulates a boat equipped with an autopilot. Linked to opencpn, this facilitates testing of various track following algorithms. For these purposes,  water current direction and speed has also been made available, adjusting the boat movements accordingly.
+
+![example](https://github.com/marcobergman/ais_simulation/blob/master/autopilot_tester.png)
+
