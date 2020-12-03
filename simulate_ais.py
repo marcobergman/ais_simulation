@@ -3,6 +3,7 @@ import wx
 import socket
 import time
 import ais_simulation
+import threading
 
 simulation = ais_simulation.Simulation()
 
@@ -11,7 +12,7 @@ DEFAULT_FILENAME = "ais_simulation.gpx"
 class SimulatorFrame(wx.Frame):
 
     def __init__(self, parent, title):
-        super(SimulatorFrame, self).__init__(parent, title = title, size=(490,150))
+        super(SimulatorFrame, self).__init__(parent, title = title, size=(490,180))
 
         self.InitUI()
         self.Centre()
@@ -27,6 +28,8 @@ class SimulatorFrame(wx.Frame):
         sizer.Add(text1, pos = (0, 0), flag = wx.ALL, border = 3)
         text2 = wx.StaticText(panel, label = "true wind")
         sizer.Add(text2, pos = (3, 0), flag = wx.ALL, border = 3)
+        text3 = wx.StaticText(panel, label = "current")
+        sizer.Add(text3, pos = (4, 0), flag = wx.ALL, border = 3)
         
 
         ## Setup up controls
@@ -68,6 +71,9 @@ class SimulatorFrame(wx.Frame):
 
         buttonSetWind = wx.Button(panel, label = "Set wind")
         sizer.Add(buttonSetWind, pos = (3, 4), flag = wx.ALIGN_CENTER|wx.ALL, border = 3)
+
+        buttonSetCurrent = wx.Button(panel, label = "Set current")
+        sizer.Add(buttonSetCurrent, pos = (4, 4), flag = wx.ALIGN_CENTER|wx.ALL, border = 3)
         
         textTwd = wx.TextCtrl(panel, value="225", size=(70,10))
         sizer.Add(textTwd, pos = (3, 1), flag = wx.EXPAND|wx.ALL, border = 3)
@@ -75,6 +81,13 @@ class SimulatorFrame(wx.Frame):
         sizer.Add(textTws, pos = (3, 2), flag = wx.EXPAND|wx.ALL, border = 3)
         textTwv = wx.TextCtrl(panel, value="10", size=(70,20))
         sizer.Add(textTwv, pos = (3, 3), flag = wx.EXPAND|wx.ALL, border = 3)
+
+        textCurD = wx.TextCtrl(panel, value="270", size=(70,10))
+        sizer.Add(textCurD, pos = (4, 1), flag = wx.EXPAND|wx.ALL, border = 3)
+        textCurS = wx.TextCtrl(panel, value="2.0", size=(70,20))
+        sizer.Add(textCurS, pos = (4, 2), flag = wx.EXPAND|wx.ALL, border = 3)
+        textCurV = wx.TextCtrl(panel, value="0", size=(70,20))
+        sizer.Add(textCurV, pos = (4, 3), flag = wx.EXPAND|wx.ALL, border = 3)
 
         buttonStart.Bind(wx.EVT_BUTTON, simulation.startBoats)
         buttonPause.Bind(wx.EVT_BUTTON, simulation.pauseBoats)
@@ -93,17 +106,41 @@ class SimulatorFrame(wx.Frame):
         self.Bind(wx.EVT_TEXT, OnChange_wind, textTwd)
         self.Bind(wx.EVT_TEXT, OnChange_wind, textTws)
         self.Bind(wx.EVT_TEXT, OnChange_wind, textTwv)
-
         buttonSetWind.Bind(wx.EVT_BUTTON, simulation.setTrueWind)
+        OnChange_wind(None)
+
+        def OnChange_current(event):
+             buttonSetCurrent.curd = textCurD.GetValue()
+             buttonSetCurrent.curs = textCurS.GetValue()
+             buttonSetCurrent.curv = textCurV.GetValue()
+             simulation.setTrueCurrent
+        self.Bind(wx.EVT_TEXT, OnChange_current, textCurD)
+        self.Bind(wx.EVT_TEXT, OnChange_current, textCurS)
+        self.Bind(wx.EVT_TEXT, OnChange_current, textCurV)
+        buttonSetCurrent.Bind(wx.EVT_BUTTON, simulation.setTrueCurrent)
+        OnChange_current(None)
 
         panel.SetSizerAndFit(sizer)
 
         self.Bind(wx.EVT_CLOSE, self.OnExitApp)
-
+        
+        text4 = wx.StaticText(panel)
+        sizer.Add(text4, pos = (2, 2), flag = wx.ALL, border = 3)
+        
+        def updateHeading(self):
+            heading = simulation.getHeading()
+            text4.SetLabel(heading)
+        
+        self.timer = wx.Timer(self)
+        self.Bind(wx.EVT_TIMER, updateHeading, self.timer)
+        self.timer.Start(1000)
+        
     def OnExitApp(self, event):
         print ('--- Window closed')
         simulation.stopBoats(event)
+        simulation.wrapup()
         self.Destroy()
+        
 
 
 
