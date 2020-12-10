@@ -30,6 +30,8 @@ class SimulatorFrame(wx.Frame):
         sizer.Add(text2, pos = (3, 0), flag = wx.ALL, border = 3)
         text3 = wx.StaticText(panel, label = "current")
         sizer.Add(text3, pos = (4, 0), flag = wx.ALL, border = 3)
+        text4 = wx.StaticText(panel, label = "speedup")
+        sizer.Add(text4, pos = (0, 3), flag = wx.ALL, border = 3)
         
 
         ## Setup up controls
@@ -74,6 +76,12 @@ class SimulatorFrame(wx.Frame):
 
         buttonSetCurrent = wx.Button(panel, label = "Set current")
         sizer.Add(buttonSetCurrent, pos = (4, 4), flag = wx.ALIGN_CENTER|wx.ALL, border = 3)
+        
+        textSpeedup = wx.TextCtrl(panel, value="60", size=(70,10))
+        sizer.Add(textSpeedup, pos = (0, 4), flag = wx.EXPAND|wx.ALL, border = 3)
+        def OnChange_speedup(event):
+            simulation.setSpeedup(float(textSpeedup.GetValue()))
+        textSpeedup.Bind(wx.EVT_TEXT, OnChange_speedup, textSpeedup)
         
         textTwd = wx.TextCtrl(panel, value="225", size=(70,10))
         sizer.Add(textTwd, pos = (3, 1), flag = wx.EXPAND|wx.ALL, border = 3)
@@ -124,12 +132,12 @@ class SimulatorFrame(wx.Frame):
 
         self.Bind(wx.EVT_CLOSE, self.OnExitApp)
         
-        text4 = wx.StaticText(panel)
-        sizer.Add(text4, pos = (2, 2), flag = wx.ALL, border = 3)
+        text5 = wx.StaticText(panel)
+        sizer.Add(text5, pos = (2, 2), flag = wx.ALL, border = 3)
         
         def updateHeading(self):
             heading = simulation.getHeading()
-            text4.SetLabel(heading)
+            text5.SetLabel(heading)
         
         self.timer = wx.Timer(self)
         self.Bind(wx.EVT_TIMER, updateHeading, self.timer)

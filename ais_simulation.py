@@ -113,30 +113,35 @@ def vhw_message(i_hdm, i_stwn):
 class Simulation(object):
 
     boats = []
-
     ownBoat = []
-
     paused = False
+    speedup = 60
 
     c=0 # progress counter
     
     def read_nmea_thread(self):
-        c,a = listensocket.accept()
-        print ("Connection from: " + str(a) )
         while True:
-            try:
-                m,x = c.recvfrom(1024)
-                first_line = m.decode().split("\r\n")[0]
-                line_elements = first_line.split(",")
-                if line_elements[0][3:] == "APB":
-                    heading = float(line_elements[11])
-                    print ("Set heading to " + str(heading))
-                    self.ownBoat.heading = heading
-                else:
-                    print (f"Unknown message {str(first_line)}")
-            except Exception as e:
-                print ("exception: " + str(e))
-                pass
+            print ("Awaiting connection...")
+            c,a = listensocket.accept()
+            print ("Connection from: " + str(a) )
+            while True:
+                try:
+                    m,x = c.recvfrom(1024)
+                    if m:
+                        first_line = m.decode().split("\r\n")[0]
+                        line_elements = first_line.split(",")
+                        if line_elements[0][3:] == "APB":
+                            heading = float(line_elements[11])
+                            print ("Set heading to " + str(heading))
+                            self.ownBoat.heading = heading
+                        else:
+                            print (f"Unknown message '{str(first_line)}'")
+                    else:
+                        break;
+                except Exception as e:
+                    print ("exception: " + str(e))
+                    pass
+            print ("Disconnected")
         print ("Ending thread")
 
 
@@ -186,8 +191,7 @@ class Simulation(object):
             # UDP
             broadcastsocket.sendto((my_message).encode('utf-8'), ('<broadcast>', 10110))
             
-        def move(self):
-            speedup = 10
+        def move(self, speedup):
             elapsed = time.time() - self.last_move
             self.lat = self.lat + elapsed * self.speed/3600/60 * speedup * math.cos(self.heading/180*math.pi)
             self.lon = self.lon + elapsed * self.speed/3600/60 * speedup * math.sin(self.heading/180*math.pi) / math.cos(self.lat/180*math.pi)
@@ -262,7 +266,7 @@ class Simulation(object):
 
     def moveBoats(self):
         for boat in self.boats:
-            boat.move()
+            boat.move(self.speedup)
             boat.show()
             self.c+=1
         print (self.c)
@@ -327,6 +331,9 @@ class Simulation(object):
         self.ownBoat.curd = float(event.GetEventObject().curd)
         self.ownBoat.curs = float(event.GetEventObject().curs)
         self.ownBoat.curv = float(event.GetEventObject().curv)
+        
+    def setSpeedup(self, speedup):
+        self.speedup = speedup
         
     def wrapup(self):
         print ("--- Closing UDP socket")
