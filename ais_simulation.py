@@ -76,10 +76,10 @@ def ais_message (i_mtype, i_repeat, i_mmsi, i_status, i_turn, i_speed, i_accurac
 def rmc_message(i_lat, i_lon, i_heading, i_speed):
     t_lat = "%02.f%07.4f" % (math.trunc(i_lat), 60*(i_lat-math.trunc(i_lat)))
     t_lon = "%03.f%07.4f" % (math.trunc(i_lon), 60*(i_lon-math.trunc(i_lon)))
-    t_date = datetime.now().strftime("%d%m%y");
     t_time = datetime.now().strftime("%H%M%S");
+    t_date = datetime.now().strftime("%d%m%y");
 
-    tempstr = '$GPRMC,%s,A,%s,N,%s,E,%s,%s,%s,,,A,C' % (t_date, t_lat, t_lon, i_speed, i_heading, t_time)
+    tempstr = '$GPRMC,%s,A,%s,N,%s,E,%s,%s,%s,,,A,C' % (t_time, t_lat, t_lon, i_speed, i_heading, t_date)
     result = tempstr + '*' + nmeaChecksum(tempstr) + "\r\n"
     return result
 
