@@ -95,14 +95,14 @@ def gll_message(i_lat, i_lon, i_heading, i_speed):
 
 def mwv_message(i_awa, i_aws):
     t_awa = "%03.0f" % (float(i_awa))
-    t_aws = "%02.f" % (float(i_aws))
+    t_aws = "%03.1f" % (float(i_aws))
     tempstr = "$IIMWV,%s,R,%s,N,A" % (t_awa, t_aws)
     result = tempstr + '*' + nmeaChecksum(tempstr) + "\r\n"
     return result
 
 def vhw_message(i_hdm, i_stwn):
     t_hdm = "%03.0f" % (float(i_hdm))
-    t_stwn = "%02.f" % (float(i_stwn))
+    t_stwn = "%03.1f" % (float(i_stwn))
     tempstr = "$IIVHW,,,%s,M,%s,N,," % (t_hdm, t_stwn)
     result = tempstr + '*' + nmeaChecksum(tempstr) + "\r\n"
     return result
@@ -177,13 +177,15 @@ class Simulation(object):
             else:
                 # calcucate apparent wind:
                 #print ("self.speed = %3f  self.tws=%3f  self.twd=%3f  self.heading=%3f" % (self.speed, self.tws, self.twd, self.heading))
-                aws = math.sqrt(self.speed**2+self.tws**2 - 2 * self.speed*self.tws*math.cos((self.heading-self.twd-180)/180*math.pi))
-                #print ("aws = " + str(aws))
-                angle = math.asin(math.sin((self.heading-self.twd - 180)/180*math.pi)/aws*self.tws)/math.pi*180
+                twa = (((self.twd - self.heading + 180) %360) - 180)/180*math.pi
+                aws = math.sqrt(self.speed**2+self.tws**2 + 2 * self.speed*self.tws*math.cos(twa))
+                try:
+                    angle = math.acos((self.tws * math.cos(twa) + self.speed)/(math.sqrt(self.tws**2 + self.speed**2 + 2*self.tws*self.speed*math.cos(twa))))/math.pi*180
+                except:
+                    angle = 0
+                if (twa < 0):
+                    angle = -(angle)
                 #print ("angle=" + str(angle))
-                #if 90 < (self.heading - 180 - self.twd) % 360 < 270:
-                    #angle = 180 - angle
-                    #print ("angle=" + str(angle))
                 awa = (angle) % 360 
                 my_message = rmc_message (self.lat, self.lon, self.heading, self.speed) + \
                                 gll_message(self.lat, self.lon, self.heading, self.speed) + \
