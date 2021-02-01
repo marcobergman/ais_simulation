@@ -109,9 +109,9 @@ def vhw_message(i_hdm, i_stwn):
 
 
 def hdm_message(i_hdm):
-    t_hdm = "%03.0f" % (float(i_hdm))
+    t_hdm = "%03.1f" % (float(i_hdm))
     
-    tempstr = "$IIHDM,%s,N,A" % (t_hdm)
+    tempstr = "$KKHDM,%s,M" % (t_hdm)
     result = tempstr + '*' + nmeaChecksum(tempstr) + "\r\n"
     return result
 
@@ -190,8 +190,8 @@ class Simulation(object):
                 my_message = rmc_message (self.lat, self.lon, self.heading, self.speed) + \
                                 gll_message(self.lat, self.lon, self.heading, self.speed) + \
                                 mwv_message(awa, aws) + \
-                                vhw_message(self.heading, self.speed) + \
-                                hdm_message(self.heading)
+                                hdm_message(self.heading) + \
+                                vhw_message(self.heading, self.speed) 
             sys.stdout.write (my_message)                                                              
 
             # TCP
