@@ -2,3 +2,4 @@
 cmd.cmd
 run.cmd
 *.pyc
+simulate_ais.spec
