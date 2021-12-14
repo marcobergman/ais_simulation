@@ -5,6 +5,7 @@ import time
 import xml.etree.ElementTree as ET
 import threading
 from datetime import datetime
+from random import random
 
 
 #TCP
@@ -22,7 +23,7 @@ print ("--- Broadcasting NMEA messges to UDP:10110")
 listensocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 listensocket.bind(("", 10111))
 listensocket.listen(1)
-print ("--- Listening to NMEA messages at TCP:10110")
+print ("--- Listening to NMEA messages at TCP:10111")
 
 
 
@@ -137,7 +138,7 @@ class Simulation(object):
                         first_line = m.decode().split("\r\n")[0]
                         line_elements = first_line.split(",")
                         if line_elements[0][3:] == "APB":
-                            heading = float(line_elements[11])
+                            heading = float(line_elements[13])
                             print ("Set heading to " + str(heading))
                             self.ownBoat.heading = heading
                         else:
@@ -177,7 +178,7 @@ class Simulation(object):
             else:
                 # calcucate apparent wind:
                 #print ("self.speed = %3f  self.tws=%3f  self.twd=%3f  self.heading=%3f" % (self.speed, self.tws, self.twd, self.heading))
-                twa = (((self.twd - self.heading + 180) %360) - 180)/180*math.pi
+                twa = (((self.twd + random() * 10 - self.heading + 180) %360) - 180)/180*math.pi
                 aws = math.sqrt(self.speed**2+self.tws**2 + 2 * self.speed*self.tws*math.cos(twa))
                 try:
                     angle = math.acos((self.tws * math.cos(twa) + self.speed)/(math.sqrt(self.tws**2 + self.speed**2 + 2*self.tws*self.speed*math.cos(twa))))/math.pi*180
