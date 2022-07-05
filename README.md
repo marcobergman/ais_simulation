@@ -3,7 +3,7 @@ Simulates moving AIS targets by creating NMEA AIVD messages and sending them off
 
 prerequisites:
 - python 2 or 3 installed with wxpython (install with sudo apt-get install gtk+-3.0 libjpeg-dev zlib1g-dev; pip install -U wxPython)
-- udp clients listening to broadcasts (0.0.0.0) on socket 10111, or
+- udp clients listening to broadcasts (0.0.0.0) on socket 10110, or
 - some nmea listener listening on localhost tcp/20220 (change the code for this)
 
 to install:
