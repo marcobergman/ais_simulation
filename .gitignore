@@ -4,3 +4,4 @@ run.cmd
 *.pyc
 simulate_ais.spec
 build\*
+build\*\*
