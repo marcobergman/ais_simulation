@@ -8,22 +8,20 @@ from datetime import datetime
 from random import random
 
 
-#TCP
-#sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#server_address = ('localhost', 20220)
-#sock.connect(server_address)
+#TCP sending
+#sendsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+#server_address = ('localhost', 30330)
+#sendsocket.connect(server_address)
 
-#UDP
-broadcastsocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-broadcastsocket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-#sock.settimeout(0.2)
-#sock.bind(("", 10110))
+#UDP broadcasting
+sendsocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+sendsocket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 print ("--- Broadcasting NMEA messges to UDP:10110")
 
 listensocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-listensocket.bind(("", 10111))
+listensocket.bind(("", 20220))
 listensocket.listen(1)
-print ("--- Listening to NMEA messages at TCP:10111")
+print ("--- Listening to NMEA messages at TCP:20220")
 
 
 
@@ -196,10 +194,10 @@ class Simulation(object):
             sys.stdout.write (my_message)                                                              
 
             # TCP
-            #sock.sendall((my_message+"\r\n").encode('utf-8'))
+            #sendsocket.sendall((my_message+"\r\n").encode('utf-8'))
 
             # UDP
-            broadcastsocket.sendto((my_message).encode('utf-8'), ('<broadcast>', 10110))
+            sendsocket.sendto((my_message).encode('utf-8'), ('<broadcast>', 10110))
             
         def move(self, speedup):
             elapsed = time.time() - self.last_move
@@ -347,7 +345,7 @@ class Simulation(object):
         
     def wrapup(self):
         print ("--- Closing UDP socket")
-        broadcastsocket.close()
+        sendsocket.close()
         #listensocket.close()
 
 #simulation.moveBoats()
