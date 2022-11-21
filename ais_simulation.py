@@ -251,7 +251,7 @@ class Simulation(object):
             else:
                 own=False
             print ('name=%s, mmsi=%s, lat=%s, lon=%s, heading=%s, speed=%s, status=%s' % (name, mmsi, lat, lon, heading, speed, status))
-            newBoat=self.Boat(mmsi, name, float(lat), float(lon), float(heading), float(speed), 0, 0, own)
+            newBoat=self.Boat(mmsi, name, float(lat), float(lon), float(heading), float(speed), status, 0, own)
             self.boats.append(newBoat)
             if own:
                 global nmea_thread
