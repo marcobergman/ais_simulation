@@ -24,7 +24,7 @@ port=30330
 direction=both
 strict=no
 ```
-- create windows executable with pyinstaller --onefile simulate_ais.py
+- create windows executable with pyinstaller --onefile simulate_ais.py --distpath .
 
 ![example](https://github.com/marcobergman/ais_simulation/blob/master/ais_simulator.png)
 
