@@ -5,3 +5,4 @@ run.cmd
 simulate_ais.spec
 build\*
 build\*\*
+build/*/*
