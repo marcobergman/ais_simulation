@@ -73,22 +73,30 @@ def ais_message (i_mtype, i_repeat, i_mmsi, i_status, i_turn, i_speed, i_accurac
     
 
 def rmc_message(i_lat, i_lon, i_heading, i_speed):
+    t_ns = 'N' if i_lat > 0 else 'S'
+    t_ew = 'E' if i_lon > 0 else 'W'
+    i_lat = abs(i_lat)
+    i_lon = abs(i_lon)
     t_lat = "%02.f%07.4f" % (math.trunc(i_lat), 60*(i_lat-math.trunc(i_lat)))
     t_lon = "%03.f%07.4f" % (math.trunc(i_lon), 60*(i_lon-math.trunc(i_lon)))
     t_time = datetime.utcnow().strftime("%H%M%S");
     t_date = datetime.utcnow().strftime("%d%m%y");
 
-    tempstr = '$GPRMC,%s,A,%s,N,%s,E,%s,%s,%s,,,A,C' % (t_time, t_lat, t_lon, i_speed, i_heading, t_date)
+    tempstr = '$GPRMC,%s,A,%s,%s,%s,%s,%s,%s,%s,,,A,C' % (t_time, t_lat, t_ns, t_lon, t_ew, i_speed, i_heading, t_date)
     result = tempstr + '*' + nmeaChecksum(tempstr) + "\r\n"
     return result
 
 def gll_message(i_lat, i_lon, i_heading, i_speed):
+    t_ns = 'N' if i_lat > 0 else 'S'
+    t_ew = 'E' if i_lon > 0 else 'W'
+    i_lat = abs(i_lat)
+    i_lon = abs(i_lon)
     t_lat = "%02.f%07.4f" % (math.trunc(i_lat), 60*(i_lat-math.trunc(i_lat)))
     t_lon = "%03.f%07.4f" % (math.trunc(i_lon), 60*(i_lon-math.trunc(i_lon)))
     t_date = datetime.utcnow().strftime("%d%m%y");
     t_time = datetime.utcnow().strftime("%H%M%S");
 
-    tempstr = '$GPGLL,%s,N,%s,E,%s,A,C' % (t_lat, t_lon, t_time)
+    tempstr = '$GPGLL,%s,%s,%s,%s,%s,A,C' % (t_lat, t_ns, t_lon, t_ew, t_time)
     result = tempstr + '*' + nmeaChecksum(tempstr) + "\r\n"
     return result
 
