@@ -123,6 +123,14 @@ def hdm_message(i_hdm):
     return result
 
 
+def dbk_message(i_dbk):
+    t_dbk = "%03.1f" % (float(i_dbk))
+    
+    tempstr = "$INDBK,,f,%s,M,,F" % (t_dbk)
+    result = tempstr + '*' + nmeaChecksum(tempstr) + "\r\n"
+    return result
+
+
 class Simulation(object):
 
     boats = []
@@ -198,7 +206,8 @@ class Simulation(object):
                                 gll_message(self.lat, self.lon, self.heading, self.speed) + \
                                 mwv_message(awa, aws) + \
                                 hdm_message(self.heading) + \
-                                vhw_message(self.heading, self.speed) 
+                                vhw_message(self.heading, self.speed) + \
+                                dbk_message(2+random())
             sys.stdout.write (my_message)                                                              
 
             # TCP
