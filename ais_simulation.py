@@ -190,7 +190,7 @@ class Simulation(object):
                 my_message = ais_message (1, 0, self.mmsi, self.status, 0, self.speed, 1, self.lat, self.lon, 
                     self.heading, self.heading, 0, self.maneuver, 0, 0, 0)
             else:
-                # calcucate apparent wind:
+                # calculate apparent wind:
                 #print ("self.speed = %3f  self.tws=%3f  self.twd=%3f  self.heading=%3f" % (self.speed, self.tws, self.twd, self.heading))
                 twa = (((self.twd + random() * 10 - self.heading + 180) %360) - 180)/180*math.pi
                 aws = math.sqrt(self.speed**2+self.tws**2 + 2 * self.speed*self.tws*math.cos(twa))
@@ -202,13 +202,14 @@ class Simulation(object):
                     angle = -(angle)
                 #print ("angle=" + str(angle))
                 awa = (angle) % 360 
+                depth = 4-(math.sin(time.time()/20)+1)**2;
                 my_message = rmc_message (self.lat, self.lon, self.heading, self.speed) + \
                                 gll_message(self.lat, self.lon, self.heading, self.speed) + \
                                 mwv_message(awa, aws) + \
                                 hdm_message(self.heading) + \
                                 vhw_message(self.heading, self.speed) + \
-                                dbk_message(2+random())
-            sys.stdout.write (my_message)                                                              
+                                dbk_message(depth)
+            sys.stdout.write (my_message)    
 
             # TCP
             #sendsocket.sendall((my_message+"\r\n").encode('utf-8'))
