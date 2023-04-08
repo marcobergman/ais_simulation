@@ -1,12 +1,13 @@
 <?xml version="1.0"?>
 <gpx version="1.1" creator="OpenCPN" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.topografix.com/GPX/1/1" xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd" xmlns:opencpn="http://www.opencpn.org">
+
   <wpt lat="52.577615042" lon="3.062908344">
     <time>2019-11-15T01:42:18Z</time>
     <name>AIS-1</name>
     <desc>HEADING=028
 SPEED=10.3
 STATUS=1
-MMSI=1</desc>
+MMSI=20</desc>
     <sym>triangle</sym>
     <type>WPT</type>
     <extensions>
@@ -23,7 +24,7 @@ MMSI=1</desc>
     <desc>HEADING=28
 SPEED=10.3
 STATUS=0
-MMSI=2</desc>
+MMSI=21</desc>
     <sym>triangle</sym>
     <type>WPT</type>
     <extensions>
@@ -40,7 +41,7 @@ MMSI=2</desc>
     <desc>HEADING=208
 SPEED=10.3
 STATUS=1
-MMSI=3</desc>
+MMSI=22</desc>
     <sym>triangle</sym>
     <type>WPT</type>
     <extensions>
@@ -57,7 +58,7 @@ MMSI=3</desc>
     <desc>HEADING=028
 SPEED=10.3
 STATUS=1
-MMSI=4</desc>
+MMSI=23</desc>
     <sym>triangle</sym>
     <type>WPT</type>
     <extensions>
@@ -68,13 +69,188 @@ MMSI=4</desc>
       <opencpn:scale_min_max UseScale="false" ScaleMin="2147483646" ScaleMax="0" />
     </extensions>
   </wpt>
-  <wpt lat="52.626518333" lon="3.199091667">
+  
+  
+  
+  <wpt lat="52.730445640" lon="4.075759594">
+    <time>2023-04-08T12:00:44Z</time>
+    <name>chukar</name>
+    <desc>HEADING=58
+SPEED=9
+STATUS=0
+MMSI=4</desc>
+    <sym>triangle</sym>
+    <type>WPT</type>
+    <extensions>
+      <opencpn:guid>567e6a68-318e-4f07-a0bd-f0236d4cecae</opencpn:guid>
+      <opencpn:viz_name>1</opencpn:viz_name>
+      <opencpn:arrival_radius>0.050</opencpn:arrival_radius>
+      <opencpn:waypoint_range_rings visible="false" number="0" step="1" units="0" colour="#FF0000" />
+      <opencpn:scale_min_max UseScale="false" ScaleMin="2147483646" ScaleMax="0" />
+    </extensions>
+  </wpt>
+  <wpt lat="52.949965000" lon="4.014480000">
+    <time>2023-04-08T12:00:40Z</time>
+    <name>alstern</name>
+    <desc>HEADING=230
+SPEED=7.2
+STATUS=0
+MMSI=3</desc>
+    <sym>triangle</sym>
+    <type>WPT</type>
+    <extensions>
+      <opencpn:guid>7be091b8-a08c-4ee7-8a13-cb53347de8aa</opencpn:guid>
+      <opencpn:viz_name>1</opencpn:viz_name>
+      <opencpn:arrival_radius>0.050</opencpn:arrival_radius>
+      <opencpn:waypoint_range_rings visible="false" number="0" step="1" units="0" colour="#FF0000" />
+      <opencpn:scale_min_max UseScale="true" ScaleMin="2147483646" ScaleMax="0" />
+    </extensions>
+  </wpt>
+  <wpt lat="52.995746554" lon="4.037058538">
+    <time>2023-04-08T12:00:36Z</time>
+    <name>elise</name>
+    <desc>HEADING=230
+SPEED=8.5
+STATUS=0
+MMSI=2</desc>
+    <sym>triangle</sym>
+    <type>WPT</type>
+    <extensions>
+      <opencpn:guid>1dc00fcb-06de-4fa3-b2b9-d3614698f9bd</opencpn:guid>
+      <opencpn:viz_name>1</opencpn:viz_name>
+      <opencpn:arrival_radius>0.050</opencpn:arrival_radius>
+      <opencpn:waypoint_range_rings visible="false" number="0" step="1" units="0" colour="#FF0000" />
+      <opencpn:scale_min_max UseScale="false" ScaleMin="2147483646" ScaleMax="0" />
+    </extensions>
+  </wpt>
+  <wpt lat="52.783528333" lon="4.186095000">
+    <time>2023-04-08T12:00:51Z</time>
+    <name>golden freeze</name>
+    <desc>HEADING=37
+SPEED=10.7
+STATUS=0
+MMSI=5</desc>
+    <sym>triangle</sym>
+    <type>WPT</type>
+    <extensions>
+      <opencpn:guid>183196f1-9900-4ea6-bfd6-334d0eae3e4f</opencpn:guid>
+      <opencpn:viz_name>1</opencpn:viz_name>
+      <opencpn:arrival_radius>0.050</opencpn:arrival_radius>
+      <opencpn:waypoint_range_rings visible="false" number="0" step="1" units="0" colour="#FF0000" />
+      <opencpn:scale_min_max UseScale="false" ScaleMin="2147483646" ScaleMax="0" />
+    </extensions>
+  </wpt>
+  <wpt lat="52.810745000" lon="4.218448333">
+    <time>2023-04-08T12:00:54Z</time>
+    <name>wilson farsund</name>
+    <desc>HEADING=37
+SPEED=8.9
+STATUS=0
+MMSI=6</desc>
+    <sym>triangle</sym>
+    <type>WPT</type>
+    <extensions>
+      <opencpn:guid>1d507e37-2f83-4aae-b636-7a5134a65337</opencpn:guid>
+      <opencpn:viz_name>1</opencpn:viz_name>
+      <opencpn:arrival_radius>0.050</opencpn:arrival_radius>
+      <opencpn:waypoint_range_rings visible="false" number="0" step="1" units="0" colour="#FF0000" />
+      <opencpn:scale_min_max UseScale="true" ScaleMin="2147483646" ScaleMax="0" />
+    </extensions>
+  </wpt>
+  <wpt lat="52.858333333" lon="4.257835000">
+    <time>2023-04-08T12:01:04Z</time>
+    <name>feng de hai</name>
+    <desc>HEADING=23
+SPEED=12.1
+STATUS=0
+MMSI=7</desc>
+    <sym>triangle</sym>
+    <type>WPT</type>
+    <extensions>
+      <opencpn:guid>7831900f-4db4-467e-a7ed-456678e46ece</opencpn:guid>
+      <opencpn:viz_name>1</opencpn:viz_name>
+      <opencpn:arrival_radius>0.050</opencpn:arrival_radius>
+      <opencpn:waypoint_range_rings visible="false" number="0" step="1" units="0" colour="#FF0000" />
+      <opencpn:scale_min_max UseScale="false" ScaleMin="2147483646" ScaleMax="0" />
+    </extensions>
+  </wpt>
+  <wpt lat="52.917746667" lon="4.322543333">
+    <time>2023-04-08T12:01:22Z</time>
+    <name>amadeus aquamarijn</name>
+    <desc>HEADING=17
+SPEED=9.2
+STATUS=0
+MMSI=8</desc>
+    <sym>triangle</sym>
+    <type>WPT</type>
+    <extensions>
+      <opencpn:guid>008dc24c-10ba-4ac4-ad42-99cb076ce212</opencpn:guid>
+      <opencpn:viz_name>1</opencpn:viz_name>
+      <opencpn:arrival_radius>0.050</opencpn:arrival_radius>
+      <opencpn:waypoint_range_rings visible="false" number="0" step="1" units="0" colour="#FF0000" />
+      <opencpn:scale_min_max UseScale="false" ScaleMin="2147483646" ScaleMax="0" />
+    </extensions>
+  </wpt>
+  <wpt lat="53.084515000" lon="4.218448333">
+    <time>2023-04-08T12:00:32Z</time>
+    <name>frakt sund</name>
+    <desc>HEADING=230
+SPEED=10.8
+STATUS=0
+MMSI=1</desc>
+    <sym>triangle</sym>
+    <type>WPT</type>
+    <extensions>
+      <opencpn:guid>076c2456-3da5-44a5-9d64-fc3506a8ee65</opencpn:guid>
+      <opencpn:viz_name>1</opencpn:viz_name>
+      <opencpn:arrival_radius>0.050</opencpn:arrival_radius>
+      <opencpn:waypoint_range_rings visible="false" number="0" step="1" units="0" colour="#FF0000" />
+      <opencpn:scale_min_max UseScale="false" ScaleMin="2147483646" ScaleMax="0" />
+    </extensions>
+  </wpt>
+  <wpt lat="53.018281667" lon="4.401598333">
+    <time>2023-04-08T12:01:41Z</time>
+    <name>krista</name>
+    <desc>HEADING=41
+SPEED=11.1
+STATUS=0
+MMSI=9</desc>
+    <sym>triangle</sym>
+    <type>WPT</type>
+    <extensions>
+      <opencpn:guid>7fe6f6e5-89ef-4973-b023-d81a37b64920</opencpn:guid>
+      <opencpn:viz_name>1</opencpn:viz_name>
+      <opencpn:arrival_radius>0.050</opencpn:arrival_radius>
+      <opencpn:waypoint_range_rings visible="false" number="0" step="1" units="0" colour="#FF0000" />
+      <opencpn:scale_min_max UseScale="true" ScaleMin="2147483646" ScaleMax="0" />
+    </extensions>
+  </wpt>
+
+
+  <wpt lat="52.927975000" lon="4.416201667">
     <time>2019-11-15T10:58:03Z</time>
     <name>AIS-OWN</name>
     <desc>HEADING=260
 SPEED=6
 STATUS=1
-MMSI=6</desc>
+MMSI=100</desc>
+    <sym>triangle</sym>
+    <type>WPT</type>
+    <extensions>
+      <opencpn:guid>0f8b0000-8f71-4b54-9dc9-b229270b0000</opencpn:guid>
+      <opencpn:viz_name>1</opencpn:viz_name>
+      <opencpn:arrival_radius>0.050</opencpn:arrival_radius>
+      <opencpn:waypoint_range_rings visible="false" number="0" step="1" units="0" colour="#FF0000" />
+      <opencpn:scale_min_max UseScale="false" ScaleMin="2147483646" ScaleMax="0" />
+    </extensions>
+  </wpt>
+  <wpt lat="52.626518333" lon="3.199091667">
+    <time>2019-11-15T10:58:03Z</time>
+    <name>AIS-OWN2</name>
+    <desc>HEADING=260
+SPEED=6
+STATUS=1
+MMSI=101</desc>
     <sym>triangle</sym>
     <type>WPT</type>
     <extensions>
