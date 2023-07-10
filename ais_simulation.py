@@ -46,16 +46,32 @@ def joinNMEAstrs(payloadstr): #str -> str
     return result
 
 
-def ais_message (i_mtype, i_repeat, i_mmsi, i_status, i_turn, i_speed, i_accuracy, i_lat, i_lon, i_course, 
-            i_heading, i_second, i_maneuver, i_spare, i_raim, i_radio):
-    def binform (num, bitWidth):
-        # deal with 2's complement
-        # thx to https://stackoverflow.com/questions/12946116/twos-complement-binary-in-python
-        num = int(num)
-        num &= (2 << bitWidth-1)-1 # mask
-        formatStr = '{:0'+str(bitWidth)+'b}'
-        return formatStr.format(int(num))
+def binform (num, bitWidth):
+    # deal with 2's complement
+    # thx to https://stackoverflow.com/questions/12946116/twos-complement-binary-in-python
+    num = int(num)
+    num &= (2 << bitWidth-1)-1 # mask
+    formatStr = '{:0'+str(bitWidth)+'b}'
+    return formatStr.format(int(num))
 
+
+def bin6(x): # int -> 6 binary digits
+   return ''.join(x & (1 << i) and '1' or '0' for i in range(5,-1,-1))
+
+def ascii2bin (myString, i_width):
+    enc=''
+    for i in range (len(myString)):
+        enc += bin6(ord(myString[i].upper()))
+        
+    return enc.ljust(i_width, '0')[:i_width]
+
+
+
+mapping = "0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVW`abcdefghijklmnopqrstuvw"
+   
+   
+def ais_message1 (i_mtype, i_repeat, i_mmsi, i_status, i_turn, i_speed, i_accuracy, i_lat, i_lon, i_course, 
+            i_heading, i_second, i_maneuver, i_spare, i_raim, i_radio):
     bits = binform(i_mtype,6) + binform(i_repeat,2) + binform(i_mmsi, 30) + binform(i_status, 4) + \
         binform(int(4.733*math.sqrt(float(i_turn))), 8) + binform(i_speed*10, 10) + binform(i_accuracy, 1) + binform(int(600000*float(i_lon)), 28) + \
         binform(int(600000*float(i_lat)), 27) + binform(i_course*10, 12) + binform(i_heading, 9) + binform(i_second, 6) + \
@@ -63,7 +79,25 @@ def ais_message (i_mtype, i_repeat, i_mmsi, i_status, i_turn, i_speed, i_accurac
     #print ("type..r.mmsi..........................sta.turn....speed.....alon.........................lat........................course......heading..sec...m.sp.rradio..............")
     #print (bits)
     enc = ''
-    mapping = "0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVW`abcdefghijklmnopqrstuvw"
+    while bits:
+        n=int(bits[:6],2)
+        enc = enc + mapping[n:n+1]
+        bits = bits[6:]
+
+    return '' + joinNMEAstrs(enc)
+    
+
+def ais_message5 (i_mtype, i_repeat, i_mmsi, i_version, i_imo, i_callsign, i_name, i_shiptype, i_to_bow, i_to_stern, i_to_port, i_to_stbd, 
+            i_fixtype, i_eta_month, i_eta_day, i_eta_hour, i_eta_minute, i_draught, i_destination, i_dte, i_spare, i_filler):
+    bits = binform(i_mtype, 6) + binform(i_repeat, 2) + binform(i_mmsi, 30) + binform(i_version, 2) + \
+        binform(i_imo, 30) + ascii2bin(i_callsign, 42) + ascii2bin(i_name, 120) + binform(i_shiptype, 8) + \
+        binform(i_to_bow, 9) + binform(i_to_stern, 9) + binform(i_to_port, 6) + binform(i_to_stbd, 6) + \
+        binform(i_fixtype, 4) + binform(i_eta_month, 4) + binform(i_eta_day, 5) + binform(i_eta_hour, 5) + \
+        binform(i_eta_minute, 6) + binform(i_draught, 8) + ascii2bin(i_destination, 120) + binform(i_dte, 1) + \
+        binform(i_spare, 1) + binform(i_filler, 2)
+    #print ("type..r.mmsi..........................v.imo...........................callsign..................................name..........................................................................................................stype...tobow....stern....port..stbd..fix.m...d....hour.min...draught.destination.............................................................................................................dsff")
+    #print (bits)
+    enc = ''
     while bits:
         n=int(bits[:6],2)
         enc = enc + mapping[n:n+1]
@@ -187,8 +221,11 @@ class Simulation(object):
 
         def show(self):
             if self.own == False:
-                my_message = ais_message (1, 0, self.mmsi, self.status, 0, self.speed, 1, self.lat, self.lon, 
-                    self.heading, self.heading, 0, self.maneuver, 0, 0, 0)
+                my_message = ais_message1 (1, 0, self.mmsi, self.status, 0, self.speed, 1, self.lat, self.lon, 
+                    self.heading, self.heading, 0, self.maneuver, 0, 0, 0) + \
+                    ais_message5 (i_mtype=5, i_repeat=1, i_mmsi=self.mmsi, i_version=0, i_imo=0, i_callsign="PB1234", i_name=self.name, \
+                        i_shiptype=7, i_to_bow=100, i_to_stern=50, i_to_port=15, i_to_stbd=15, i_fixtype=3, i_eta_month=0, i_eta_day=0, \
+                        i_eta_hour=24, i_eta_minute=60, i_draught=50, i_destination="Timbuktu", i_dte=1, i_spare=0, i_filler=0)
             else:
                 # calculate apparent wind:
                 #print ("self.speed = %3f  self.tws=%3f  self.twd=%3f  self.heading=%3f" % (self.speed, self.tws, self.twd, self.heading))

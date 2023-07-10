@@ -3,7 +3,7 @@
 
   <wpt lat="52.577615042" lon="3.062908344">
     <time>2019-11-15T01:42:18Z</time>
-    <name>AIS-1</name>
+    <name>HMS SPANKER 1</name>
     <desc>HEADING=028
 SPEED=10.3
 STATUS=1
@@ -20,7 +20,7 @@ MMSI=20</desc>
   </wpt>
   <wpt lat="52.560516681" lon="3.018649757">
     <time>2019-11-15T09:06:12Z</time>
-    <name>AIS-2</name>
+    <name>HMS SPANKER 2</name>
     <desc>HEADING=28
 SPEED=10.3
 STATUS=0
@@ -37,7 +37,7 @@ MMSI=21</desc>
   </wpt>
   <wpt lat="52.780918302" lon="3.132218962">
     <time>2019-11-15T09:06:14Z</time>
-    <name>AIS-3</name>
+    <name>HMS SPANKER 3</name>
     <desc>HEADING=208
 SPEED=10.3
 STATUS=1
@@ -54,7 +54,7 @@ MMSI=22</desc>
   </wpt>
   <wpt lat="52.477138333" lon="2.952928333">
     <time>2019-11-15T09:06:17Z</time>
-    <name>AIS-4</name>
+    <name>HMS SPANKER 4</name>
     <desc>HEADING=028
 SPEED=10.3
 STATUS=1
@@ -176,7 +176,7 @@ MMSI=7</desc>
   </wpt>
   <wpt lat="52.917746667" lon="4.322543333">
     <time>2023-04-08T12:01:22Z</time>
-    <name>amadeus aquamarijn</name>
+    <name>amadeus aquamarijnamadeus aquamarijn</name>
     <desc>HEADING=17
 SPEED=9.2
 STATUS=0
