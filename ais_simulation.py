@@ -224,7 +224,7 @@ class Simulation(object):
                 my_message = ais_message1 (1, 0, self.mmsi, self.status, 0, self.speed, 1, self.lat, self.lon, 
                     self.heading, self.heading, 0, self.maneuver, 0, 0, 0) + \
                     ais_message5 (i_mtype=5, i_repeat=1, i_mmsi=self.mmsi, i_version=0, i_imo=0, i_callsign="PB1234", i_name=self.name, \
-                        i_shiptype=7, i_to_bow=100, i_to_stern=50, i_to_port=15, i_to_stbd=15, i_fixtype=3, i_eta_month=0, i_eta_day=0, \
+                        i_shiptype=79, i_to_bow=100, i_to_stern=50, i_to_port=15, i_to_stbd=15, i_fixtype=3, i_eta_month=0, i_eta_day=0, \
                         i_eta_hour=24, i_eta_minute=60, i_draught=50, i_destination="Timbuktu", i_dte=1, i_spare=0, i_filler=0)
             else:
                 # calculate apparent wind:
