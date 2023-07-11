@@ -7,7 +7,7 @@
     <desc>HEADING=028
 SPEED=10.3
 STATUS=1
-MMSI=20</desc>
+MMSI=244150001</desc>
     <sym>triangle</sym>
     <type>WPT</type>
     <extensions>
@@ -24,7 +24,7 @@ MMSI=20</desc>
     <desc>HEADING=28
 SPEED=10.3
 STATUS=0
-MMSI=21</desc>
+MMSI=244150002</desc>
     <sym>triangle</sym>
     <type>WPT</type>
     <extensions>
@@ -41,7 +41,7 @@ MMSI=21</desc>
     <desc>HEADING=208
 SPEED=10.3
 STATUS=1
-MMSI=22</desc>
+MMSI=244150003</desc>
     <sym>triangle</sym>
     <type>WPT</type>
     <extensions>
@@ -58,7 +58,7 @@ MMSI=22</desc>
     <desc>HEADING=028
 SPEED=10.3
 STATUS=1
-MMSI=23</desc>
+MMSI=244150004</desc>
     <sym>triangle</sym>
     <type>WPT</type>
     <extensions>
@@ -78,7 +78,7 @@ MMSI=23</desc>
     <desc>HEADING=58
 SPEED=9
 STATUS=0
-MMSI=4</desc>
+MMSI=244150005</desc>
     <sym>triangle</sym>
     <type>WPT</type>
     <extensions>
@@ -95,7 +95,7 @@ MMSI=4</desc>
     <desc>HEADING=230
 SPEED=7.2
 STATUS=0
-MMSI=3</desc>
+MMSI=244150006</desc>
     <sym>triangle</sym>
     <type>WPT</type>
     <extensions>
@@ -112,7 +112,7 @@ MMSI=3</desc>
     <desc>HEADING=230
 SPEED=8.5
 STATUS=0
-MMSI=2</desc>
+MMSI=244150007</desc>
     <sym>triangle</sym>
     <type>WPT</type>
     <extensions>
@@ -129,7 +129,7 @@ MMSI=2</desc>
     <desc>HEADING=37
 SPEED=10.7
 STATUS=0
-MMSI=5</desc>
+MMSI=244150008</desc>
     <sym>triangle</sym>
     <type>WPT</type>
     <extensions>
@@ -146,7 +146,7 @@ MMSI=5</desc>
     <desc>HEADING=37
 SPEED=8.9
 STATUS=0
-MMSI=6</desc>
+MMSI=244150009</desc>
     <sym>triangle</sym>
     <type>WPT</type>
     <extensions>
@@ -163,7 +163,7 @@ MMSI=6</desc>
     <desc>HEADING=23
 SPEED=12.1
 STATUS=0
-MMSI=7</desc>
+MMSI=244150010</desc>
     <sym>triangle</sym>
     <type>WPT</type>
     <extensions>
@@ -180,7 +180,7 @@ MMSI=7</desc>
     <desc>HEADING=17
 SPEED=9.2
 STATUS=0
-MMSI=8</desc>
+MMSI=244150011</desc>
     <sym>triangle</sym>
     <type>WPT</type>
     <extensions>
@@ -197,7 +197,7 @@ MMSI=8</desc>
     <desc>HEADING=230
 SPEED=10.8
 STATUS=0
-MMSI=1</desc>
+MMSI=244150012</desc>
     <sym>triangle</sym>
     <type>WPT</type>
     <extensions>
@@ -214,7 +214,7 @@ MMSI=1</desc>
     <desc>HEADING=41
 SPEED=11.1
 STATUS=0
-MMSI=9</desc>
+MMSI=244150013</desc>
     <sym>triangle</sym>
     <type>WPT</type>
     <extensions>
@@ -233,7 +233,7 @@ MMSI=9</desc>
     <desc>HEADING=260
 SPEED=6
 STATUS=1
-MMSI=100</desc>
+MMSI=244150014</desc>
     <sym>triangle</sym>
     <type>WPT</type>
     <extensions>
@@ -250,7 +250,7 @@ MMSI=100</desc>
     <desc>HEADING=260
 SPEED=6
 STATUS=1
-MMSI=101</desc>
+MMSI=244150015</desc>
     <sym>triangle</sym>
     <type>WPT</type>
     <extensions>

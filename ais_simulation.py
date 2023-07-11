@@ -28,12 +28,12 @@ print ("--- Listening to NMEA messages at TCP:20220")
 
 def nmeaChecksum(s): # str -> two hex digits in str
     chkSum = 0
-    subStr = s[1:len(s)]
+    subStr = s[1:len(s)] # clip off the leading $ or !
 
     for e in range(len(subStr)):
         chkSum ^= ord((subStr[e]))
 
-    hexstr = str(hex(chkSum))[2:4]
+    hexstr = str(hex(chkSum))[2:4].upper()
     if len(hexstr) == 2:
         return hexstr
     else:
@@ -46,7 +46,7 @@ def joinNMEAstrs(payloadstr): #str -> str
     return result
 
 
-def binform (num, bitWidth):
+def num2bin (num, bitWidth):
     # deal with 2's complement
     # thx to https://stackoverflow.com/questions/12946116/twos-complement-binary-in-python
     num = int(num)
@@ -55,13 +55,10 @@ def binform (num, bitWidth):
     return formatStr.format(int(num))
 
 
-def bin6(x): # int -> 6 binary digits
-   return ''.join(x & (1 << i) and '1' or '0' for i in range(5,-1,-1))
-
-def ascii2bin (myString, i_width):
+def string2bin (myString, i_width):
     enc=''
     for i in range (len(myString)):
-        enc += bin6(ord(myString[i].upper()))
+        enc += num2bin(ord(myString[i].upper()), 6)
         
     return enc.ljust(i_width, '0')[:i_width]
 
@@ -72,10 +69,10 @@ mapping = "0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVW`abcdefghijklmnopqrstuvw"
    
 def ais_message1 (i_mtype, i_repeat, i_mmsi, i_status, i_turn, i_speed, i_accuracy, i_lat, i_lon, i_course, 
             i_heading, i_second, i_maneuver, i_spare, i_raim, i_radio):
-    bits = binform(i_mtype,6) + binform(i_repeat,2) + binform(i_mmsi, 30) + binform(i_status, 4) + \
-        binform(int(4.733*math.sqrt(float(i_turn))), 8) + binform(i_speed*10, 10) + binform(i_accuracy, 1) + binform(int(600000*float(i_lon)), 28) + \
-        binform(int(600000*float(i_lat)), 27) + binform(i_course*10, 12) + binform(i_heading, 9) + binform(i_second, 6) + \
-        binform(i_maneuver, 2) + binform(i_spare, 3) + binform(i_raim, 1) + binform(i_radio, 19)
+    bits = num2bin(i_mtype,6) + num2bin(i_repeat,2) + num2bin(i_mmsi, 30) + num2bin(i_status, 4) + \
+        num2bin(int(4.733*math.sqrt(float(i_turn))), 8) + num2bin(i_speed*10, 10) + num2bin(i_accuracy, 1) + num2bin(int(600000*float(i_lon)), 28) + \
+        num2bin(int(600000*float(i_lat)), 27) + num2bin(i_course*10, 12) + num2bin(i_heading, 9) + num2bin(i_second, 6) + \
+        num2bin(i_maneuver, 2) + num2bin(i_spare, 3) + num2bin(i_raim, 1) + num2bin(i_radio, 19)
     #print ("type..r.mmsi..........................sta.turn....speed.....alon.........................lat........................course......heading..sec...m.sp.rradio..............")
     #print (bits)
     enc = ''
@@ -89,12 +86,12 @@ def ais_message1 (i_mtype, i_repeat, i_mmsi, i_status, i_turn, i_speed, i_accura
 
 def ais_message5 (i_mtype, i_repeat, i_mmsi, i_version, i_imo, i_callsign, i_name, i_shiptype, i_to_bow, i_to_stern, i_to_port, i_to_stbd, 
             i_fixtype, i_eta_month, i_eta_day, i_eta_hour, i_eta_minute, i_draught, i_destination, i_dte, i_spare, i_filler):
-    bits = binform(i_mtype, 6) + binform(i_repeat, 2) + binform(i_mmsi, 30) + binform(i_version, 2) + \
-        binform(i_imo, 30) + ascii2bin(i_callsign, 42) + ascii2bin(i_name, 120) + binform(i_shiptype, 8) + \
-        binform(i_to_bow, 9) + binform(i_to_stern, 9) + binform(i_to_port, 6) + binform(i_to_stbd, 6) + \
-        binform(i_fixtype, 4) + binform(i_eta_month, 4) + binform(i_eta_day, 5) + binform(i_eta_hour, 5) + \
-        binform(i_eta_minute, 6) + binform(i_draught, 8) + ascii2bin(i_destination, 120) + binform(i_dte, 1) + \
-        binform(i_spare, 1) + binform(i_filler, 2)
+    bits = num2bin(i_mtype, 6) + num2bin(i_repeat, 2) + num2bin(i_mmsi, 30) + num2bin(i_version, 2) + \
+        num2bin(i_imo, 30) + string2bin(i_callsign, 42) + string2bin(i_name, 120) + num2bin(i_shiptype, 8) + \
+        num2bin(i_to_bow, 9) + num2bin(i_to_stern, 9) + num2bin(i_to_port, 6) + num2bin(i_to_stbd, 6) + \
+        num2bin(i_fixtype, 4) + num2bin(i_eta_month, 4) + num2bin(i_eta_day, 5) + num2bin(i_eta_hour, 5) + \
+        num2bin(i_eta_minute, 6) + num2bin(i_draught, 8) + string2bin(i_destination, 120) + num2bin(i_dte, 1) + \
+        num2bin(i_spare, 1) + num2bin(i_filler, 2)
     #print ("type..r.mmsi..........................v.imo...........................callsign..................................name..........................................................................................................stype...tobow....stern....port..stbd..fix.m...d....hour.min...draught.destination.............................................................................................................dsff")
     #print (bits)
     enc = ''
@@ -102,8 +99,12 @@ def ais_message5 (i_mtype, i_repeat, i_mmsi, i_version, i_imo, i_callsign, i_nam
         n=int(bits[:6],2)
         enc = enc + mapping[n:n+1]
         bits = bits[6:]
+        
+    tempstr1 = '!AIVDM,2,1,3,A,' + enc[:59] + ',0'
+    tempstr2 = '!AIVDM,2,2,3,A,' + enc[59:] + ',0'
+    return  tempstr1 + '*' + nmeaChecksum(tempstr1) + "\r\n" + tempstr2 + '*' + nmeaChecksum(tempstr2) + "\r\n"
+    # return '' + joinNMEAstrs(enc) 
 
-    return '' + joinNMEAstrs(enc)
     
 
 def rmc_message(i_lat, i_lon, i_heading, i_speed):
