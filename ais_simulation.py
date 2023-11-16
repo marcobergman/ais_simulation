@@ -117,7 +117,7 @@ def rmc_message(i_lat, i_lon, i_heading, i_speed):
     t_time = datetime.utcnow().strftime("%H%M%S");
     t_date = datetime.utcnow().strftime("%d%m%y");
 
-    tempstr = '$GPRMC,%s,A,%s,%s,%s,%s,%s,%s,%s,,,A,C' % (t_time, t_lat, t_ns, t_lon, t_ew, i_speed, i_heading, t_date)
+    tempstr = '$GPRMC,%s,A,%s,%s,%s,%s,%s,%s,%s,,' % (t_time, t_lat, t_ns, t_lon, t_ew, i_speed, i_heading, t_date)
     result = tempstr + '*' + nmeaChecksum(tempstr) + "\r\n"
     return result
 
@@ -188,7 +188,7 @@ class Simulation(object):
                         line_elements = first_line.split(",")
                         if line_elements[0][3:] == "APB":
                             heading = float(line_elements[13])
-                            print ("Set heading to " + str(heading))
+                            # print ("Set heading to " + str(heading))
                             self.ownBoat.heading = heading
                         else:
                             print (f"Unknown message '{str(first_line)}'")
@@ -247,7 +247,7 @@ class Simulation(object):
                                 hdm_message(self.heading) + \
                                 vhw_message(self.heading, self.speed) + \
                                 dbk_message(depth)
-            sys.stdout.write (my_message)    
+            #sys.stdout.write (my_message)    
 
             # TCP
             #sendsocket.sendall((my_message+"\r\n").encode('utf-8'))
@@ -306,7 +306,8 @@ class Simulation(object):
                 own=True
             else:
                 own=False
-            print ('name=%s, mmsi=%s, lat=%s, lon=%s, heading=%s, speed=%s, status=%s' % (name, mmsi, lat, lon, heading, speed, status))
+                
+            # print ('name=%s, mmsi=%s, lat=%s, lon=%s, heading=%s, speed=%s, status=%s' % (name, mmsi, lat, lon, heading, speed, status))
             newBoat=self.Boat(mmsi, name, float(lat), float(lon), float(heading), float(speed), status, 0, own)
             self.boats.append(newBoat)
             if own:
@@ -333,7 +334,7 @@ class Simulation(object):
             boat.move(self.speedup)
             boat.show()
             self.c+=1
-        print (self.c)
+        # print (self.c)
 
 
     def showBoats(self):
