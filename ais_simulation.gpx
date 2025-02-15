@@ -6,7 +6,7 @@
     <name>HMS SPANKER 1</name>
     <desc>HEADING=028
 SPEED=10.3
-STATUS=1
+STATUS=0
 MMSI=244150001</desc>
     <sym>triangle</sym>
     <type>WPT</type>
@@ -40,7 +40,7 @@ MMSI=244150002</desc>
     <name>HMS SPANKER 3</name>
     <desc>HEADING=208
 SPEED=10.3
-STATUS=1
+STATUS=0
 MMSI=244150003</desc>
     <sym>triangle</sym>
     <type>WPT</type>
@@ -57,7 +57,7 @@ MMSI=244150003</desc>
     <name>HMS SPANKER 4</name>
     <desc>HEADING=028
 SPEED=10.3
-STATUS=1
+STATUS=0
 MMSI=244150004</desc>
     <sym>triangle</sym>
     <type>WPT</type>
@@ -232,7 +232,7 @@ MMSI=244150013</desc>
     <name>AIS-OWN</name>
     <desc>HEADING=260
 SPEED=6
-STATUS=1
+STATUS=0
 MMSI=244150014</desc>
     <sym>triangle</sym>
     <type>WPT</type>
@@ -249,7 +249,7 @@ MMSI=244150014</desc>
     <name>AIS-OWN2</name>
     <desc>HEADING=260
 SPEED=6
-STATUS=1
+STATUS=0
 MMSI=244150015</desc>
     <sym>triangle</sym>
     <type>WPT</type>
