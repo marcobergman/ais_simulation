@@ -158,6 +158,14 @@ def hdm_message(i_hdm):
     return result
 
 
+def hdt_message(i_hdm):
+    t_hdm = "%03.1f" % (float(i_hdm))
+    
+    tempstr = "$KKHDT,%s,T" % (t_hdm)
+    result = tempstr + '*' + nmeaChecksum(tempstr) + "\r\n"
+    return result
+
+
 def dbk_message(i_dbk):
     t_dbk = "%03.1f" % (float(i_dbk))
     
@@ -245,6 +253,7 @@ class Simulation(object):
                                 gll_message(self.lat, self.lon, self.heading, self.speed) + \
                                 mwv_message(awa, aws) + \
                                 hdm_message(self.heading) + \
+                                hdt_message(self.heading) + \
                                 vhw_message(self.heading, self.speed) + \
                                 dbk_message(depth)
             #sys.stdout.write (my_message)    
