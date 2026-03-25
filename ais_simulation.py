@@ -196,7 +196,7 @@ class Simulation(object):
                         line_elements = first_line.split(",")
                         if line_elements[0][3:] == "APB":
                             heading = float(line_elements[13])
-                            print (first_line)
+                            # print (first_line)
                             # print ("Set heading to " + str(heading))
                             self.ownBoat.heading = heading
                             if (line_elements[14][:1] == "M"):
