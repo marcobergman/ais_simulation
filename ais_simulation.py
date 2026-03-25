@@ -196,8 +196,11 @@ class Simulation(object):
                         line_elements = first_line.split(",")
                         if line_elements[0][3:] == "APB":
                             heading = float(line_elements[13])
+                            print (first_line)
                             # print ("Set heading to " + str(heading))
                             self.ownBoat.heading = heading
+                            if (line_elements[14][:1] == "M"):
+                                self.ownBoat.heading -= 2.5;
                         else:
                             print (f"Unknown message '{str(first_line)}'")
                     else:
@@ -252,7 +255,6 @@ class Simulation(object):
                 my_message = rmc_message (self.lat, self.lon, self.heading, self.speed) + \
                                 gll_message(self.lat, self.lon, self.heading, self.speed) + \
                                 mwv_message(awa, aws) + \
-                                hdm_message(self.heading) + \
                                 hdt_message(self.heading) + \
                                 vhw_message(self.heading, self.speed) + \
                                 dbk_message(depth)
