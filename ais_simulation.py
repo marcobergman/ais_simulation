@@ -142,26 +142,18 @@ def mwv_message(i_awa, i_aws):
     result = tempstr + '*' + nmeaChecksum(tempstr) + "\r\n"
     return result
 
-def vhw_message(i_hdm, i_stwn):
-    t_hdm = "%03.0f" % (float(i_hdm))
+def vhw_message(i_hdt, i_stwn):
+    t_hdt = "%03.0f" % (float(i_hdt))
     t_stwn = "%03.1f" % (float(i_stwn))
-    tempstr = "$IIVHW,,,%s,M,%s,N,," % (t_hdm, t_stwn)
+    tempstr = "$IIVHW,%s,T,,,%s,N,," % (t_hdt, t_stwn)
     result = tempstr + '*' + nmeaChecksum(tempstr) + "\r\n"
     return result
 
 
-def hdm_message(i_hdm):
-    t_hdm = "%03.1f" % (float(i_hdm))
+def hdt_message(i_hdt):
+    t_hdt = "%03.1f" % (float(i_hdt))
     
-    tempstr = "$KKHDM,%s,M" % (t_hdm)
-    result = tempstr + '*' + nmeaChecksum(tempstr) + "\r\n"
-    return result
-
-
-def hdt_message(i_hdm):
-    t_hdm = "%03.1f" % (float(i_hdm))
-    
-    tempstr = "$KKHDT,%s,T" % (t_hdm)
+    tempstr = "$KKHDT,%s,T" % (t_hdt)
     result = tempstr + '*' + nmeaChecksum(tempstr) + "\r\n"
     return result
 
@@ -256,8 +248,8 @@ class Simulation(object):
                                 gll_message(self.lat, self.lon, self.heading, self.speed) + \
                                 mwv_message(awa, aws) + \
                                 hdt_message(self.heading) + \
-                                vhw_message(self.heading, self.speed) + \
                                 dbk_message(depth)
+                                #vhw_message(self.heading, self.speed) 
             #sys.stdout.write (my_message)    
 
             # TCP
